@@ -1,0 +1,25 @@
+set relativenumber
+
+map j gj
+map k gk
+
+let mapleader=" "
+nnoremap <leader><leader> :action GotoFile<CR>
+nnoremap <leader>/ :action FindInPath<CR>
+nnoremap gcc :action CommentByLineComment<CR>
+xnoremap gc :action CommentByLineComment<CR>
+
+nnoremap x "_x
+xnoremap x "_x
+nnoremap c "_c
+xnoremap c "_c
+nnoremap Y y$
+xnoremap p P
+
+nnoremap L :action NextTab<CR>
+nnoremap H :action PreviousTab<CR>
+
+nnoremap <leader>bd :action CloseContent<CR>
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+

@@ -1,0 +1,39 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "vim_mode": true,
+  "vim": {
+    "toggle_relative_line_numbers": true,
+  },
+  "experimental.theme_overrides": {
+    "syntax": {
+      // I just hate italic
+      "comment": { "font_style": "normal" },
+      "keyword": { "font_style": "normal" },
+      "string": { "font_style": "normal" },
+      "function": { "font_style": "normal" },
+    },
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Colored Zed Icons Theme Dark",
+  },
+  "disable_ai": false,
+  "ui_font_size": 15,
+  "buffer_font_size": 15,
+  "ui_font_family": "IosevkaNL-Nice",
+  "buffer_font_family": "IosevkaNL-Nice",
+  "theme": "Gruber Darker",
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+    },
+  },
+}

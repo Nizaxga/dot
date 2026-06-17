@@ -1,0 +1,126 @@
+# Reference: https://github.com/i3/i3/blob/next/etc/config
+
+start-at-login = true
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+on-focus-changed = ['move-mouse window-lazy-center']
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+[gaps]
+inner.horizontal = 3
+inner.vertical = 3
+outer.left = 3
+outer.bottom = 3
+outer.top = 3
+outer.right = 3
+
+[mode.main.binding]
+alt-h = 'focus --boundaries-action wrap-around-the-workspace left'
+alt-l = 'focus --boundaries-action wrap-around-the-workspace right'
+alt-j = 'focus --boundaries-action wrap-around-the-workspace down'
+alt-k = 'focus --boundaries-action wrap-around-the-workspace up'
+
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-h = 'move left'
+alt-shift-l = 'move right'
+
+# Terminal
+# alt-enter = 'exec-and-forget open -n /Applications/kitty.app'
+alt-enter = 'exec-and-forget open -n /Applications/Ghostty.app'
+# alt-s = 'exec-and-forget open -n /Applications/Spotify.app'
+
+# alt-h = 'split horizontal'
+# alt-v = 'split vertical'
+
+alt-f = 'fullscreen'
+alt-shift-f = 'macos-native-fullscreen'
+
+# alt-s = 'layout v_accordion' # Conflict with AWS clound search
+alt-w = 'layout h_accordion'
+alt-e = 'layout tiles horizontal vertical'
+
+alt-space = 'layout floating tiling'
+
+alt-1 = 'workspace 1' # Browser
+alt-2 = 'workspace 2' # Code, IDE
+alt-3 = 'workspace 3' # Spotify
+alt-4 = 'workspace 4' # ETC.
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+
+# Addition screen
+# alt-0 = 'workspace 10'
+# alt-shift-0 = 'move-node-to-workspace 10'
+
+alt-shift-c = 'reload-config'
+
+alt-r = 'mode resize'
+
+[mode.resize.binding]
+k = 'resize width -50'
+j = 'resize width +50'
+enter = 'mode main'
+esc = 'mode main'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.WorkflowKit.ShortcutsViewService'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.AppStore'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Notes'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Photos'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'app.zen-browser.zen'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'dev.zed.Zed'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.neovide.neovide'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = "com.spotify.client"
+run = 'move-node-to-workspace 3'

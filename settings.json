@@ -1,0 +1,240 @@
+{
+    "editor.fontSize": 15,
+    "editor.wordWrap": "off",
+    "editor.wordWrapColumn": 120,
+    "editor.lineNumbers": "relative",
+    "editor.minimap.enabled": false,
+    "editor.formatOnSave": true,
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "editor.fontFamily": "IosevkaNL-Nice",
+    "editor.renderLineHighlight": "none",
+    "editor.scrollbar.horizontal": "hidden",
+    "editor.scrollbar.vertical": "hidden",
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.fontFamily": "JetBrainsMonoNL Nerd Font",
+    "workbench.startupEditor": "none",
+    "workbench.sideBar.location": "right",
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.editorActionsLocation": "titleBar",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "window.titleBarStyle": "custom",
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.leader": "<space>",
+    "vim.enableNeovim": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<leader>",
+                "/"
+            ],
+            "commands": [
+                "workbench.action.findInFiles"
+            ]
+        },
+        {
+            "before": [
+                "H"
+            ],
+            "commands": [
+                "workbench.action.previousEditor"
+            ]
+        },
+        {
+            "before": [
+                "L"
+            ],
+            "commands": [
+                "workbench.action.nextEditor"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "|"
+            ],
+            "commands": [
+                ":vsplit"
+            ]
+        },
+        {
+            "before": [
+                "leader",
+                "-"
+            ],
+            "commands": [
+                ":split"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+h"
+            ],
+            "commands": [
+                "workbench.action.focusLeftGroup"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+j"
+            ],
+            "commands": [
+                "workbench.action.focusBelowGroup"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+k"
+            ],
+            "commands": [
+                "workbench.action.focusAboveGroup"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+l"
+            ],
+            "commands": [
+                "workbench.action.focusRightGroup"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "e"
+            ],
+            "commands": [
+                "workbench.view.explorer"
+            ]
+        },
+        {
+            "before": [
+                "x"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "x"
+            ]
+        },
+        {
+            "before": [
+                "c"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "c"
+            ]
+        },
+        {
+            "before": [
+                "Y"
+            ],
+            "after": [
+                "y",
+                "$"
+            ]
+        },
+        {
+            "before": [
+                "j"
+            ],
+            "after": [
+                "g",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "k"
+            ],
+            "after": [
+                "g",
+                "k"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "x"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "x"
+            ]
+        },
+        {
+            "before": [
+                "c"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "c"
+            ]
+        },
+        {
+            "before": [
+                "p"
+            ],
+            "after": [
+                "P"
+            ]
+        },
+        {
+            "before": [
+                ">"
+            ],
+            "commands": [
+                "editor.action.indentLines",
+                "vim.reselectLastVisualSelection"
+            ]
+        },
+        {
+            "before": [
+                "<"
+            ],
+            "commands": [
+                "editor.action.outdentLines",
+                "vim.reselectLastVisualSelection"
+            ]
+        }
+    ],
+    "extensions.experimental.affinity": {
+        "chat.agentsControl.enabled": 0,
+        "vscodevim.vim": 1
+    },
+    "breadcrumbs.enabled": false,
+    "notebook.output.scrolling": true,
+    "notebook.output.minimalErrorRendering": true,
+    "notebook.lineNumbers": "on",
+    "chat.agentsControl.enabled": "hidden",
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.minimap.autohide": "mouseover",
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "constant.numeric",
+                "settings": {
+                    "foreground": "#949BB0"
+                }
+            }
+        ]
+    },
+    "editor.bracketPairColorization.enabled": false,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "workbench.iconTheme": "vscode-icons",
+    "chat.disableAIFeatures": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "workbench.colorTheme": "Tsoding Emacs Gruber Minimal"
+}
