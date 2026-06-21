@@ -36,9 +36,10 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.foldmethod = "manual"
 vim.o.autocomplete = true
-vim.o.complete = ".,w,b,u,t,o"
-vim.o.completeopt = "fuzzy,menu,noselect,popup"
-vim.o.pumheight = 7
+vim.o.complete = ".,w,b,t,o"
+vim.o.completeopt = "fuzzy,menuone,noselect,popup"
+vim.o.pumheight = 8
+
 
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nohlsearch")
@@ -50,7 +51,7 @@ vim.pack.add({
     { src = "https://github.com/ej-shafran/compile-mode.nvim" },
     { src = "https://github.com/nvim-mini/mini.pairs" },
     { src = "https://github.com/nvim-mini/mini.ai" },
-    { src = "https://github.com/jake-stewart/multicursor.nvim" },
+    { src = "https://github.com/sindrets/diffview.nvim" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/mason-org/mason.nvim" },
     { src = "https://github.com/neogitorg/neogit" },
@@ -117,23 +118,7 @@ require('gitsigns').setup {
     end,
 
 }
-local mc = require("multicursor-nvim")
-mc.setup()
 local map = vim.keymap
-map.set({ "n", "x" }, "<C-n>", function() mc.matchAddCursor(1) end)
-map.set({ "n", "x" }, "<C-s>", function() mc.matchSkipCursor(1) end)
-mc.addKeymapLayer(function(layerSet)
-    layerSet({ "n", "x" }, "<left>", mc.prevCursor)
-    layerSet({ "n", "x" }, "<right>", mc.nextCursor)
-    layerSet({ "n", "x" }, "<C-p>", mc.prevCursor)
-    layerSet("n", "<esc>", function()
-        if not mc.cursorsEnabled() then
-            mc.enableCursors()
-        else
-            mc.clearCursors()
-        end
-    end)
-end)
 require('gruber-darker').setup({
     bold = true,
     undercurl = true,
@@ -272,6 +257,19 @@ map.set("n", "<leader>U", "<cmd>Undotree<cr>")
 map.set("n", "n", "nzzzv")
 map.set("n", "N", "Nzzzv")
 local neogit = require("neogit")
+neogit.setup {
+    integrations = {
+        -- If enabled, use telescope for menu selection rather than vim.ui.select.
+        -- Allows multi-select and some things that vim.ui.select doesn't.
+        telescope = true,
+        -- Neogit only provides inline diffs. If you want a more traditional way to look at diffs, you can use `diffview`.
+        -- The diffview integration enables the diff popup.
+        --
+        -- Requires you to have `sindrets/diffview.nvim` installed.
+        diffview = true,
+    },
+    diff_viewer = "diffview",
+}
 map.set("n", "<leader>gg", function() neogit.open({ kind = "tab" }) end)
 
 vim.lsp.enable({
