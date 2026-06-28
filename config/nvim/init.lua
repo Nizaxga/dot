@@ -102,7 +102,6 @@ require('gitsigns').setup {
     status_formatter             = nil,   -- Use default
     max_file_length              = 40000, -- Disable if file is longer than this (in lines)
     preview_config               = {
-        -- Options passed to nvim_open_win
         style = 'minimal',
         relative = 'cursor',
         row = 0,
@@ -158,7 +157,6 @@ require('oil').setup({
     skip_confirm_for_simple_edits = true,
     view_options = { show_hidden = true },
 })
-require('telescope').setup()
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 require("telescope").setup({ -- Yank path
@@ -185,6 +183,8 @@ require("telescope").setup({ -- Yank path
         },
     },
 })
+local builtin = require("telescope.builtin")
+local ivy = require("telescope.themes").get_ivy()
 vim.g.compile_mode = {
     bang_expansion = true,
     -- Default to run current file
@@ -237,12 +237,18 @@ map.set("n", "<leader>R", "<cmd>Recompile<cr>")
 map.set("n", "<leader>fc", function() vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua") end)
 map.set("n", '<leader>ud', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map.set('n', '<leader>uh', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
-map.set("n", "<leader><leader>", "<cmd>Telescope find_files theme=ivy<cr>")
-map.set("n", "<leader>/", "<cmd>Telescope live_grep theme=ivy<cr>")
-map.set("n", "<leader>,", "<cmd>Telescope buffers theme=ivy<cr>")
-map.set("n", "<leader>fr", "<cmd>Telescope oldfiles theme=ivy<cr>")
-map.set("n", "<leader>ft", "<cmd>Telescope lsp_dynamic_workspace_symbols theme=ivy<cr>")
-map.set("n", "<leader>xx", "<cmd>Telescope diagnostics theme=ivy<cr>")
+
+map.set("n", "<leader><leader>", function() builtin.find_files(ivy) end)
+map.set("n", "<leader>/", function() builtin.live_grep(ivy) end)
+map.set("n", "<leader>,", function() builtin.buffers(ivy) end)
+map.set("n", "<leader>fr", function() builtin.oldfiles(ivy) end)
+map.set("n", "<leader>ft", function() builtin.lsp_dynamic_workspace_symbols(ivy) end)
+map.set("n", "<leader>xx", function() builtin.diagnostics(ivy) end)
+map.set("n", "gI", function() builtin.lsp_implementations(ivy) end)
+map.set("n", "gD", function() builtin.lsp_definitions(ivy) end)
+map.set("n", "<leader>gb", function() builtin.git_branches(ivy) end)
+map.set("n", "<leader>gc", function() builtin.git_bcommits(ivy) end)
+
 map.set("n", "<leader>U", "<cmd>Undotree<cr>")
 map.set("n", "n", "nzzzv")
 map.set("n", "N", "Nzzzv")
@@ -370,4 +376,4 @@ local function pack_clean()
         vim.pack.del(unused_plugins)
     end
 end
-map.set("n", "<leader>pc", pack_clean)
+vim.api.nvim_create_user_command("PackClean", pack_clean, { desc = "Clean Unused Packages" })
