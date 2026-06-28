@@ -55,7 +55,7 @@ vim.pack.add({
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/mason-org/mason.nvim" },
     { src = "https://github.com/neogitorg/neogit" },
-    { src = "https://github.com/m00qek/baleia.nvim" }, -- ANSI Colorize
+    { src = "https://github.com/m00qek/baleia.nvim" },
 })
 
 require('mason').setup()
@@ -130,14 +130,6 @@ require('gruber-darker').setup({
     },
 })
 vim.cmd.colorscheme("gruber-darker")
-
-vim.api.nvim_set_hl(0, "MultiCursorCursor", { reverse = true })
-vim.api.nvim_set_hl(0, "MultiCursorVisual", { link = "Visual" })
-vim.api.nvim_set_hl(0, "MultiCursorSign", { link = "SignColumn" })
-vim.api.nvim_set_hl(0, "MultiCursorMatchPreview", { link = "Search" })
-vim.api.nvim_set_hl(0, "MultiCursorDisabledCursor", { reverse = true })
-vim.api.nvim_set_hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
-vim.api.nvim_set_hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
 
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
@@ -249,8 +241,6 @@ map.set("n", "<leader><leader>", "<cmd>Telescope find_files theme=ivy<cr>")
 map.set("n", "<leader>/", "<cmd>Telescope live_grep theme=ivy<cr>")
 map.set("n", "<leader>,", "<cmd>Telescope buffers theme=ivy<cr>")
 map.set("n", "<leader>fr", "<cmd>Telescope oldfiles theme=ivy<cr>")
-map.set("n", "<leader>fh", "<cmd>Telescope help_tags theme=ivy<cr>")
-map.set("n", "<leader>fs", "<cmd>Telescope grep_string theme=ivy<cr>")
 map.set("n", "<leader>ft", "<cmd>Telescope lsp_dynamic_workspace_symbols theme=ivy<cr>")
 map.set("n", "<leader>xx", "<cmd>Telescope diagnostics theme=ivy<cr>")
 map.set("n", "<leader>U", "<cmd>Undotree<cr>")
@@ -259,18 +249,11 @@ map.set("n", "N", "Nzzzv")
 local neogit = require("neogit")
 neogit.setup {
     integrations = {
-        -- If enabled, use telescope for menu selection rather than vim.ui.select.
-        -- Allows multi-select and some things that vim.ui.select doesn't.
         telescope = true,
-        -- Neogit only provides inline diffs. If you want a more traditional way to look at diffs, you can use `diffview`.
-        -- The diffview integration enables the diff popup.
-        --
-        -- Requires you to have `sindrets/diffview.nvim` installed.
         diffview = true,
     },
     diff_viewer = "diffview",
 }
-map.set("n", "<leader>gg", function() neogit.open({ kind = "tab" }) end)
 
 vim.lsp.enable({
     "rust_analyzer",
