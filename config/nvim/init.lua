@@ -1,15 +1,6 @@
 require("vim._core.ui2").enable({})
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
-vim.opt.fillchars = {
-    foldopen = "",
-    foldclose = "",
-    fold = " ",
-    foldsep = " ",
-    diff = "╱",
-    eob = "~",
-}
--- Options
 vim.o.wrap = false
 vim.o.mouse = "a"
 vim.o.clipboard = "unnamedplus"
@@ -21,7 +12,8 @@ vim.o.modeline = false
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
-vim.o.textwidth = 100
+vim.o.textwidth = 120
+vim.o.scrolloff = 4
 vim.o.showtabline = 1
 vim.o.smoothscroll = false
 vim.o.ignorecase = true
@@ -39,8 +31,6 @@ vim.o.autocomplete = true
 vim.o.complete = ".,w,b,t,o"
 vim.o.completeopt = "fuzzy,menuone,noselect,popup"
 vim.o.pumheight = 8
-
-
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nohlsearch")
 vim.pack.add({
@@ -57,7 +47,6 @@ vim.pack.add({
     { src = "https://github.com/neogitorg/neogit" },
     { src = "https://github.com/m00qek/baleia.nvim" },
 })
-
 require('mason').setup()
 require('gitsigns').setup {
     signs                        = {
@@ -132,6 +121,9 @@ vim.cmd.colorscheme("gruber-darker")
 
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
+vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
+vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartzBold" })
+vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "GruberDarkerNiagara" })
 vim.api.nvim_create_autocmd("FileType", {
     callback = function()
         local hls = vim.api.nvim_get_hl(0, {})
@@ -159,31 +151,29 @@ require('oil').setup({
 })
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
-require("telescope").setup({ -- Yank path
+require("telescope").setup({ -- Yank Absolute path
     defaults = {
         mappings = {
             i = {
                 ["<C-y>"] = function(prompt_bufnr)
                     local selection = action_state.get_selected_entry()
-                    -- selection[1] contains the relative path from the cwd
-                    vim.fn.setreg("+", selection[1])
-                    print("Copied path: " .. selection[1])
+                    vim.fn.setreg("+", selection.path)
+                    print("Copied path: " .. selection.path)
                     actions.close(prompt_bufnr)
-                    -- If you want absolute paths instead, use selection.path
                 end,
             },
             n = {
                 ["<C-y>"] = function(prompt_bufnr)
                     local selection = action_state.get_selected_entry()
-                    vim.fn.setreg("+", selection[1])
-                    print("Copied path: " .. selection[1])
+                    vim.fn.setreg("+", selection.path)
+                    print("Copied path: " .. selection.path)
                     actions.close(prompt_bufnr)
                 end,
             },
         },
     },
 })
-local builtin = require("telescope.builtin")
+local telescope_builtin = require("telescope.builtin")
 local ivy = require("telescope.themes").get_ivy()
 vim.g.compile_mode = {
     bang_expansion = true,
@@ -200,13 +190,12 @@ vim.g.compile_mode = {
     },
     baleia_setup = true,
 }
-
--- QOL
 map.set({ "n", "x" }, "j", "gj")
 map.set({ "n", "x" }, "k", "gk")
 map.set({ "n", "x" }, "x", '"_x')
 map.set({ "n", "x" }, "c", '"_c')
-map.set({ 'n', "v" }, '<leader>ca', vim.lsp.buf.code_action)
+map.set({ 'n', 'x' }, '<leader>r', function() vim.lsp.buf.rename() end)
+map.set('n', '<leader>ca', vim.lsp.buf.code_action)
 map.set("t", "<Esc>", "<C-\\><C-n>")
 map.set("x", "<", "<gv")
 map.set("x", ">", ">gv")
@@ -219,7 +208,6 @@ map.set("n", "<leader>n", "<cmd>new<cr>")
 map.set("n", "<leader>bd", "<cmd>bnext | bd#<cr>")
 map.set("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
-
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if buf ~= current and vim.api.nvim_buf_is_loaded(buf) then
             vim.api.nvim_buf_delete(buf, {})
@@ -237,19 +225,31 @@ map.set("n", "<leader>R", "<cmd>Recompile<cr>")
 map.set("n", "<leader>fc", function() vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua") end)
 map.set("n", '<leader>ud', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map.set('n', '<leader>uh', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
-
-map.set("n", "<leader><leader>", function() builtin.find_files(ivy) end)
-map.set("n", "<leader>/", function() builtin.live_grep(ivy) end)
-map.set("n", "<leader>,", function() builtin.buffers(ivy) end)
-map.set("n", "<leader>fr", function() builtin.oldfiles(ivy) end)
-map.set("n", "<leader>ft", function() builtin.lsp_dynamic_workspace_symbols(ivy) end)
-map.set("n", "<leader>xx", function() builtin.diagnostics(ivy) end)
-map.set("n", "gI", function() builtin.lsp_implementations(ivy) end)
-map.set("n", "gD", function() builtin.lsp_definitions(ivy) end)
-map.set("n", "<leader>gb", function() builtin.git_branches(ivy) end)
-map.set("n", "<leader>gc", function() builtin.git_bcommits(ivy) end)
-
-map.set("n", "<leader>U", "<cmd>Undotree<cr>")
+map.set("n", "<leader><leader>", function()
+    telescope_builtin.find_files(vim.tbl_extend("force", ivy, {
+        hidden = true,
+        no_ignore = true,
+        file_ignore_patterns = { "^%.git/" }
+    }))
+end)
+map.set("n", "<leader>/", function()
+    telescope_builtin.live_grep(vim.tbl_extend("force", ivy, {
+        hidden = true,
+        no_ignore = true,
+        additional_args = { "--glob=!.git/" }
+    }))
+end)
+map.set("n", "<leader>,", function() telescope_builtin.buffers(ivy) end)
+map.set("n", "<leader>fr", function() telescope_builtin.oldfiles(ivy) end)
+map.set("n", "<leader>fh", function() telescope_builtin.help_tags(ivy) end)
+map.set("n", "<leader>ft", function() telescope_builtin.lsp_dynamic_workspace_symbols(ivy) end)
+map.set("n", "<leader>xx", function() telescope_builtin.diagnostics(ivy) end)
+map.set("n", "gI", function() telescope_builtin.lsp_implementations(ivy) end)
+map.set("n", "gD", function() telescope_builtin.lsp_definitions(ivy) end)
+map.set("n", "<leader>gb", function() telescope_builtin.git_branches(ivy) end)
+map.set("n", "<leader>gc", function() telescope_builtin.git_bcommits(ivy) end)
+map.set("n", "<leader>gC", function() telescope_builtin.git_commits(ivy) end)
+map.set("n", "<leader>u", "<cmd>Undotree<cr>")
 map.set("n", "n", "nzzzv")
 map.set("n", "N", "Nzzzv")
 local neogit = require("neogit")
@@ -267,12 +267,8 @@ vim.lsp.enable({
     "lua_ls",
     "pyright",
     "ruff",
-    "tinymist",
     "ts_ls",
     "gopls",
-    "yamlls",
-    "jsonls",
-    "jdtls",
     "bashls",
 })
 
@@ -302,7 +298,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         end
     end,
 })
-local format_on_save = false
+local format_on_save = true
 vim.api.nvim_create_user_command("FormatOnSaveToggle", function()
     format_on_save = not format_on_save
     vim.notify("Format on save: " .. (format_on_save and "enabled" or "disabled"))
@@ -319,28 +315,13 @@ map.set("n", "<leader>=", "<cmd>FormatOnSaveToggle<cr>")
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(ev)
         vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
-            -- Optional formating of items
             convert = function(item)
-                -- Remove leading misc chars for abbr name,
-                -- and cap field to 25 chars
-                --local abbr = item.label
-                --abbr = abbr:match("[%w_.]+.*") or abbr
-                --abbr = #abbr > 25 and abbr:sub(1, 24) .. "…" or abbr
-                --
-                -- Remove return value
-                --local menu = ""
-
-                -- Only show abbr name, remove leading misc chars (bullets etc.),
-                -- and cap field to 15 chars
                 local abbr = item.label
                 abbr = abbr:gsub("%b()", ""):gsub("%b{}", "")
                 abbr = abbr:match("[%w_.]+.*") or abbr
                 abbr = #abbr > 15 and abbr:sub(1, 14) .. "…" or abbr
-
-                -- Cap return value field to 15 chars
                 local menu = item.detail or ""
                 menu = #menu > 15 and menu:sub(1, 14) .. "…" or menu
-
                 return { abbr = abbr, menu = menu }
             end,
         })
