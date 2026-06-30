@@ -33,6 +33,9 @@ vim.o.completeopt = "fuzzy,menuone,noselect,popup"
 vim.o.pumheight = 8
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nohlsearch")
+vim.cmd.packadd("nvim.difftool")
+vim.cmd.packadd("nvim.tohtml")
+vim.cmd.packadd("matchit")
 vim.pack.add({
     { src = "https://github.com/nvim-telescope/telescope.nvim" },
     { src = "https://github.com/nvim-lua/plenary.nvim" },
@@ -40,12 +43,12 @@ vim.pack.add({
     { src = "https://github.com/stevearc/oil.nvim" },
     { src = "https://github.com/ej-shafran/compile-mode.nvim" },
     { src = "https://github.com/nvim-mini/mini.pairs" },
-    { src = "https://github.com/nvim-mini/mini.ai" },
     { src = "https://github.com/sindrets/diffview.nvim" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/mason-org/mason.nvim" },
     { src = "https://github.com/neogitorg/neogit" },
     { src = "https://github.com/m00qek/baleia.nvim" },
+    { src = "https://github.com/windwp/nvim-ts-autotag" }
 })
 require('mason').setup()
 require('gitsigns').setup {
@@ -122,7 +125,7 @@ vim.cmd.colorscheme("gruber-darker")
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
-vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartzBold" })
+vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartz" })
 vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "GruberDarkerNiagara" })
 vim.api.nvim_create_autocmd("FileType", {
     callback = function()
@@ -136,7 +139,14 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 require('mini.pairs').setup()
-require('mini.ai').setup()
+require('nvim-ts-autotag').setup({
+    opts = {
+        -- Defaults
+        enable_close = true,      -- Auto close tags
+        enable_rename = true,     -- Auto rename pairs of tags
+        enable_close_on_slash = false -- Auto close on trailing </
+    },
+})
 require('oil').setup({
     default_file_explorer = true,
     columns = {
@@ -252,6 +262,11 @@ map.set("n", "<leader>gC", function() telescope_builtin.git_commits(ivy) end)
 map.set("n", "<leader>u", "<cmd>Undotree<cr>")
 map.set("n", "n", "nzzzv")
 map.set("n", "N", "Nzzzv")
+vim.keymap.set("n", "<leader>yp", function()
+    local path = vim.fn.expand("%:p")
+    vim.fn.setreg("+", path)
+    vim.notify("Yanked absolute path: " .. path)
+end, { desc = "Yank absolute buffer path" })
 local neogit = require("neogit")
 neogit.setup {
     integrations = {
@@ -298,7 +313,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         end
     end,
 })
-local format_on_save = true
+local format_on_save = false
 vim.api.nvim_create_user_command("FormatOnSaveToggle", function()
     format_on_save = not format_on_save
     vim.notify("Format on save: " .. (format_on_save and "enabled" or "disabled"))
