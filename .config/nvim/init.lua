@@ -124,6 +124,8 @@ require('gruber-darker').setup({
 })
 vim.cmd.colorscheme("gruber-darker")
 
+vim.api.nvim_set_hl(0, "Normal", { bg = "None" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "None" })
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
@@ -287,12 +289,14 @@ neogit.setup {
 vim.lsp.enable({
     "rust_analyzer",
     "clangd",
+    "harper_ls",
     "lua_ls",
     "pyright",
     "ruff",
     "ts_ls",
     "gopls",
     "bashls",
+    "texlab",
 })
 
 vim.diagnostic.config({
@@ -321,20 +325,21 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         end
     end,
 })
-local format_on_save = false
-vim.api.nvim_create_user_command("FormatOnSaveToggle", function()
-    format_on_save = not format_on_save
-    vim.notify("Format on save: " .. (format_on_save and "enabled" or "disabled"))
-end, {})
+local function lsp_format(bufnr)
+    vim.lsp.buf.format({ bufnr = bufnr, async = false, })
+end
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*",
-    callback = function()
-        if format_on_save then
-            vim.lsp.buf.format { async = false }
+    callback = function(ev)
+        if vim.b[ev.buf].format_on_save then
+            lsp_format(ev.buf)
         end
     end,
 })
-map.set("n", "<leader>=", "<cmd>FormatOnSaveToggle<cr>")
+map.set("n", "<leader>=", function()
+    vim.b.format_on_save = not vim.b.format_on_save
+    vim.notify("Format on save: " .. (vim.b.format_on_save and "enabled" or "disabled"))
+end)
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(ev)
         vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
