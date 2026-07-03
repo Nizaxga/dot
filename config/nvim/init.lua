@@ -48,8 +48,10 @@ vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
     { src = "https://github.com/neogitorg/neogit" },
     { src = "https://github.com/m00qek/baleia.nvim" },
-    { src = "https://github.com/windwp/nvim-ts-autotag" }
+    { src = "https://github.com/windwp/nvim-ts-autotag" }, -- need html parser
+    { src = "https://github.com/brenoprata10/nvim-highlight-colors" }
 })
+require('nvim-highlight-colors').setup({})
 require('mason').setup()
 require('gitsigns').setup {
     signs                        = {
@@ -142,8 +144,8 @@ require('mini.pairs').setup()
 require('nvim-ts-autotag').setup({
     opts = {
         -- Defaults
-        enable_close = true,      -- Auto close tags
-        enable_rename = true,     -- Auto rename pairs of tags
+        enable_close = true,          -- Auto close tags
+        enable_rename = true,         -- Auto rename pairs of tags
         enable_close_on_slash = false -- Auto close on trailing </
     },
 })
@@ -157,7 +159,12 @@ require('oil').setup({
     },
     delete_to_trash = true,
     skip_confirm_for_simple_edits = true,
+    prompt_save_on_select_new_entry = false,
     view_options = { show_hidden = true },
+    keymaps = {
+        ["<C-h>"] = false,
+        ["<C-l>"] = false,
+    }
 })
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
@@ -188,16 +195,17 @@ local ivy = require("telescope.themes").get_ivy()
 vim.g.compile_mode = {
     bang_expansion = true,
     -- Default to run current file
-    default_command = {
-        python = "python %",
-        lua = "lua %",
-        javascript = "bun %",
-        typescript = "bun %",
-        c = "[ -f Makefile ] && make -k || (cc -o %:r % && ./%:r)",
-        cpp = "[ -f Makefile ] && make -k || (cc -std=c++23 -o %:r % && ./%:r)",
-        go = "go run %",
-        rust = "[ -f Cargo.toml ] && cargo run || (rustc % --crate-name %:r && ./%:r)"
-    },
+    default_command = "",
+    -- default_command = {
+    --     python = "python %",
+    --     lua = "lua %",
+    --     javascript = "bun %",
+    --     typescript = "bun %",
+    --     c = "[ -f Makefile ] && make -k || (cc -o %:r % && ./%:r)",
+    --     cpp = "[ -f Makefile ] && make -k || (cc -std=c++23 -o %:r % && ./%:r)",
+    --     go = "go run %",
+    --     rust = "[ -f Cargo.toml ] && cargo run || (rustc % --crate-name %:r && ./%:r)"
+    -- },
     baleia_setup = true,
 }
 map.set({ "n", "x" }, "j", "gj")
