@@ -28,9 +28,10 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.foldmethod = "manual"
 vim.o.autocomplete = true
-vim.o.complete = ".,w,b,t,o"
+vim.o.complete = ".,w,b,u,t,o"
 vim.o.completeopt = "fuzzy,menuone,noselect,popup"
 vim.o.pumheight = 8
+vim.o.tags = "./tags;,tags"
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nohlsearch")
 vim.cmd.packadd("nvim.difftool")
