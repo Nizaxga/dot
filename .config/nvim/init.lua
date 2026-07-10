@@ -6,7 +6,6 @@ vim.o.mouse = "a"
 vim.o.clipboard = "unnamedplus"
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
-vim.o.winborder = "rounded"
 vim.o.expandtab = true
 vim.o.modeline = false
 vim.o.tabstop = 4
@@ -27,11 +26,8 @@ vim.o.signcolumn = "yes"
 vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.foldmethod = "manual"
-vim.o.autocomplete = true
-vim.o.complete = ".,w,b,u,t,o"
-vim.o.completeopt = "fuzzy,menuone,noselect,popup"
 vim.o.pumheight = 8
-vim.o.tags = "./tags;,tags"
+vim.o.tags = "./tags;,tags" -- `ctags -R .`
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nohlsearch")
 vim.cmd.packadd("nvim.difftool")
@@ -49,8 +45,21 @@ vim.pack.add({
     { src = "https://github.com/mason-org/mason.nvim" },
     { src = "https://github.com/neogitorg/neogit" },
     { src = "https://github.com/m00qek/baleia.nvim" },
-    { src = "https://github.com/windwp/nvim-ts-autotag" }, -- need html parser
-    { src = "https://github.com/brenoprata10/nvim-highlight-colors" }
+    { src = "https://github.com/brenoprata10/nvim-highlight-colors" },
+    { src = 'https://github.com/saghen/blink.lib' },
+    {
+        src = 'https://github.com/saghen/blink.cmp',
+        version = vim.version.range("*") -- to installed prebuilt bin
+    }
+})
+local cmp = require('blink.cmp').setup({
+    keymap = {
+        preset = 'default',
+        ['<C-n>'] = { 'show', 'select_next', "fallback" },
+        ['<CR>'] = { 'select_and_accept' },
+    },
+    completion = { documentation = { auto_show = false } },
+    sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
 })
 require('nvim-highlight-colors').setup({})
 require('mason').setup()
@@ -110,7 +119,6 @@ require('gitsigns').setup {
         map("<leader>gB", gs.blame, "Blame Buffer")
         map("<leader>gd", gs.diffthis, "Diff This")
     end,
-
 }
 local map = vim.keymap
 require('gruber-darker').setup({
@@ -124,9 +132,6 @@ require('gruber-darker').setup({
     },
 })
 vim.cmd.colorscheme("gruber-darker")
-
-vim.api.nvim_set_hl(0, "Normal", { bg = "None" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "None" })
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
@@ -144,14 +149,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 require('mini.pairs').setup()
-require('nvim-ts-autotag').setup({
-    opts = {
-        -- Defaults
-        enable_close = true,          -- Auto close tags
-        enable_rename = true,         -- Auto rename pairs of tags
-        enable_close_on_slash = false -- Auto close on trailing </
-    },
-})
 require('oil').setup({
     default_file_explorer = true,
     columns = {
@@ -197,18 +194,7 @@ local telescope_builtin = require("telescope.builtin")
 local ivy = require("telescope.themes").get_ivy()
 vim.g.compile_mode = {
     bang_expansion = true,
-    -- Default to run current file
     default_command = "",
-    -- default_command = {
-    --     python = "python %",
-    --     lua = "lua %",
-    --     javascript = "bun %",
-    --     typescript = "bun %",
-    --     c = "[ -f Makefile ] && make -k || (cc -o %:r % && ./%:r)",
-    --     cpp = "[ -f Makefile ] && make -k || (cc -std=c++23 -o %:r % && ./%:r)",
-    --     go = "go run %",
-    --     rust = "[ -f Cargo.toml ] && cargo run || (rustc % --crate-name %:r && ./%:r)"
-    -- },
     baleia_setup = true,
 }
 map.set({ "n", "x" }, "j", "gj")
@@ -238,6 +224,7 @@ end)
 map.set("n", "<s-h>", "<cmd>bp<cr>")
 map.set("n", "<s-l>", "<cmd>bn<cr>")
 map.set("n", "+", "<cmd>vertical resize +5<cr>")
+map.set("n", "-", "<cmd>vertical resize -5<cr>")
 map.set("n", "<leader>|", "<cmd>vsplit<cr>")
 map.set("n", "<leader>-", "<cmd>split<cr>")
 map.set("n", "<leader>e", "<cmd>Oil<cr>")
@@ -260,11 +247,13 @@ map.set("n", "<leader>/", function()
         additional_args = { "--glob=!.git/" }
     }))
 end)
+map.set("n", "g<S-r>", function() telescope_builtin.lsp_implementations(ivy) end)
 map.set("n", "<leader>,", function() telescope_builtin.buffers(ivy) end)
 map.set("n", "<leader>fr", function() telescope_builtin.oldfiles(ivy) end)
 map.set("n", "<leader>fh", function() telescope_builtin.help_tags(ivy) end)
 map.set("n", "<leader>ft", function() telescope_builtin.lsp_dynamic_workspace_symbols(ivy) end)
 map.set("n", "<leader>xx", function() telescope_builtin.diagnostics(ivy) end)
+map.set("n", "gR", function() telescope_builtin.lsp_references(ivy) end)
 map.set("n", "gI", function() telescope_builtin.lsp_implementations(ivy) end)
 map.set("n", "gD", function() telescope_builtin.lsp_definitions(ivy) end)
 map.set("n", "<leader>gb", function() telescope_builtin.git_branches(ivy) end)
@@ -286,11 +275,10 @@ neogit.setup {
     },
     diff_viewer = "diffview",
 }
-
 vim.lsp.enable({
     "rust_analyzer",
     "clangd",
-    "harper_ls",
+    -- "harper_ls",
     "lua_ls",
     "pyright",
     "ruff",
@@ -299,7 +287,6 @@ vim.lsp.enable({
     "bashls",
     "texlab",
 })
-
 vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
@@ -315,10 +302,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     callback = function(event)
         local exclude = { "gitcommit" }
         local buf = event.buf
-        if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
+        if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].vim_last_loc then
             return
         end
-        vim.b[buf].lazyvim_last_loc = true
+        vim.b[buf].vim_last_loc = true
         local mark = vim.api.nvim_buf_get_mark(buf, '"')
         local lcount = vim.api.nvim_buf_line_count(buf)
         if mark[1] > 0 and mark[1] <= lcount then
@@ -332,36 +319,15 @@ end
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*",
     callback = function(ev)
-        if vim.b[ev.buf].format_on_save then
+        if vim.b[ev.buf].format_on_save ~= false then
             lsp_format(ev.buf)
         end
     end,
 })
 map.set("n", "<leader>=", function()
-    vim.b.format_on_save = not vim.b.format_on_save
+    vim.b.format_on_save = not (vim.b.format_on_save ~= false)
     vim.notify("Format on save: " .. (vim.b.format_on_save and "enabled" or "disabled"))
 end)
-vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(ev)
-        vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
-            convert = function(item)
-                local abbr = item.label
-                abbr = abbr:gsub("%b()", ""):gsub("%b{}", "")
-                abbr = abbr:match("[%w_.]+.*") or abbr
-                abbr = #abbr > 15 and abbr:sub(1, 14) .. "…" or abbr
-                local menu = item.detail or ""
-                menu = #menu > 15 and menu:sub(1, 14) .. "…" or menu
-                return { abbr = abbr, menu = menu }
-            end,
-        })
-    end,
-})
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "TelescopePrompt" },
-    callback = function()
-        vim.bo.autocomplete = false
-    end
-})
 vim.api.nvim_create_user_command("PackUpdate", function()
     vim.pack.update()
 end, { desc = "Update Packages" })
