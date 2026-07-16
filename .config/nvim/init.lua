@@ -55,11 +55,41 @@ vim.pack.add({
 local cmp = require('blink.cmp').setup({
     keymap = {
         preset = 'default',
-        ['<C-n>'] = { 'show', 'select_next', "fallback" },
-        ['<CR>'] = { 'select_and_accept' },
+        ['<C-n>'] = { 'show', 'select_next', 'fallback' },
+        ['<CR>'] = { 'select_and_accept', 'fallback' },
     },
     completion = { documentation = { auto_show = false } },
     sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
+    appearance = {
+        nerd_font_variant = 'none',
+        kind_icons = {
+            Text = '[Txt]',
+            Method = '[Mth]',
+            Function = '[Fnc]',
+            Constructor = '[Cst]',
+            Field = '[Fld]',
+            Variable = '[Var]',
+            Class = '[Cls]',
+            Interface = '[Inf]',
+            Module = '[Mod]',
+            Property = '[Prp]',
+            Unit = '[Unt]',
+            Value = '[Val]',
+            Enum = '[Enm]',
+            Keyword = '[Key]',
+            Snippet = '[Snp]',
+            Color = '[Clr]',
+            File = '[Fil]',
+            Reference = '[Ref]',
+            Folder = '[Fld]',
+            EnumMember = '[Enm]',
+            Constant = '[Cst]',
+            Struct = '[Str]',
+            Event = '[Evn]',
+            Operator = '[Opr]',
+            TypeParameter = '[Typ]',
+        }
+    }
 })
 require('nvim-highlight-colors').setup({})
 require('mason').setup()
@@ -168,8 +198,9 @@ require('oil').setup({
 })
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
-require("telescope").setup({ -- Yank Absolute path
+require("telescope").setup({        -- Yank Absolute path
     defaults = {
+        path_display = { "smart" }, -- 👈 add this
         mappings = {
             i = {
                 ["<C-y>"] = function(prompt_bufnr)
@@ -193,6 +224,7 @@ require("telescope").setup({ -- Yank Absolute path
 local telescope_builtin = require("telescope.builtin")
 local ivy = require("telescope.themes").get_ivy()
 vim.g.compile_mode = {
+    input_word_completion = true,
     bang_expansion = true,
     default_command = "",
     baleia_setup = true,
@@ -210,8 +242,6 @@ map.set("n", "<C-j>", "<C-w>j")
 map.set("n", "<C-k>", "<C-w>k")
 map.set("n", "<C-h>", "<C-w>h")
 map.set("n", "<C-l>", "<C-w>l")
-map.set("n", "<leader>o", "<C-w>o")
-map.set("n", "<leader>n", "<cmd>new<cr>")
 map.set("n", "<leader>bd", "<cmd>bnext | bd#<cr>")
 map.set("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
