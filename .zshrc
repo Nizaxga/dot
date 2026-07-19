@@ -13,10 +13,10 @@ alias :q="exit"
 
 # Python venv
 ve() {
-    if ! source .venv/bin/activate &>/dev/null; then
+    if ! . .venv/bin/activate &>/dev/null; then
         echo "No .venv found, Create one..."
         python3 -m venv .venv
-        source .venv/bin/activate
+        . .venv/bin/activate
     fi
 }
 alias de="deactivate"

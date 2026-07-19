@@ -4,6 +4,7 @@ vim.g.maplocalleader = "\\"
 vim.o.wrap = false
 vim.o.mouse = "a"
 vim.o.clipboard = "unnamedplus"
+vim.o.winborder = "rounded"
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.o.expandtab = true
@@ -193,14 +194,13 @@ require('oil').setup({
     view_options = { show_hidden = true },
     keymaps = {
         ["<C-h>"] = false,
-        ["<C-l>"] = false,
     }
 })
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
-require("telescope").setup({        -- Yank Absolute path
+require("telescope").setup({
     defaults = {
-        path_display = { "smart" }, -- 👈 add this
+        path_display = { "smart" },
         mappings = {
             i = {
                 ["<C-y>"] = function(prompt_bufnr)
@@ -258,13 +258,25 @@ map.set("n", "-", "<cmd>vertical resize -5<cr>")
 map.set("n", "<leader>|", "<cmd>vsplit<cr>")
 map.set("n", "<leader>-", "<cmd>split<cr>")
 map.set("n", "<leader>e", "<cmd>Oil<cr>")
+map.set("n", "<leader>u", "<cmd>Undotree<cr>")
+map.set("n", "n", "nzzzv")
+map.set("n", "N", "Nzzzv")
 map.set("n", "<leader>C", "<cmd>Compile<cr>")
 map.set("n", "<leader>R", "<cmd>Recompile<cr>")
-map.set("n", "<leader>fc", function() vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua") end)
+map.set("n", "<leader>yp", function()
+    local path = vim.fn.expand("%:p")
+    vim.fn.setreg("+", path)
+    vim.notify("Yanked absolute path: " .. path)
+end, { desc = "Yank absolute buffer path" })
+map.set("n", "<leader>fc", function()
+    vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua")
+end)
 map.set("n", '<leader>ud', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map.set('n', '<leader>uh', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
+map.set('n', '<leader>k', function() telescope_builtin.builtin(vim.tbl_extend("force", ivy, { previewer = false, })) end)
 map.set("n", "<leader><leader>", function()
     telescope_builtin.find_files(vim.tbl_extend("force", ivy, {
+        previewer = false,
         hidden = true,
         no_ignore = true,
         file_ignore_patterns = { "^%.git/" }
@@ -277,26 +289,13 @@ map.set("n", "<leader>/", function()
         additional_args = { "--glob=!.git/" }
     }))
 end)
-map.set("n", "g<S-r>", function() telescope_builtin.lsp_implementations(ivy) end)
 map.set("n", "<leader>,", function() telescope_builtin.buffers(ivy) end)
 map.set("n", "<leader>fr", function() telescope_builtin.oldfiles(ivy) end)
 map.set("n", "<leader>fh", function() telescope_builtin.help_tags(ivy) end)
-map.set("n", "<leader>ft", function() telescope_builtin.lsp_dynamic_workspace_symbols(ivy) end)
 map.set("n", "<leader>xx", function() telescope_builtin.diagnostics(ivy) end)
 map.set("n", "gR", function() telescope_builtin.lsp_references(ivy) end)
 map.set("n", "gI", function() telescope_builtin.lsp_implementations(ivy) end)
 map.set("n", "gD", function() telescope_builtin.lsp_definitions(ivy) end)
-map.set("n", "<leader>gb", function() telescope_builtin.git_branches(ivy) end)
-map.set("n", "<leader>gc", function() telescope_builtin.git_bcommits(ivy) end)
-map.set("n", "<leader>gC", function() telescope_builtin.git_commits(ivy) end)
-map.set("n", "<leader>u", "<cmd>Undotree<cr>")
-map.set("n", "n", "nzzzv")
-map.set("n", "N", "Nzzzv")
-vim.keymap.set("n", "<leader>yp", function()
-    local path = vim.fn.expand("%:p")
-    vim.fn.setreg("+", path)
-    vim.notify("Yanked absolute path: " .. path)
-end, { desc = "Yank absolute buffer path" })
 local neogit = require("neogit")
 neogit.setup {
     integrations = {
@@ -304,6 +303,7 @@ neogit.setup {
         diffview = true,
     },
     diff_viewer = "diffview",
+    use_icons = false
 }
 vim.lsp.enable({
     "rust_analyzer",
@@ -383,3 +383,20 @@ local function pack_clean()
     end
 end
 vim.api.nvim_create_user_command("PackClean", pack_clean, { desc = "Clean Unused Packages" })
+vim.o.guifont = "IosevkaNL-Nice:h17"
+map.set("n", "<C-=>", function()
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1
+end)
+map.set("n", "<C-->", function()
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1
+end)
+map.set("n", "<C-0>", function()
+    vim.g.neovide_scale_factor = 1.0
+end)
+vim.g.neovide_progress_bar_enabled = false
+vim.g.neovide_cursor_animation_length = 0
+vim.g.neovide_scroll_animation_length = 0.1
+vim.g.neovide_position_animation_length = 0
+vim.g.neovide_hide_mouse_when_typing = true
+vim.g.neovide_cursor_antialiasing = true
+vim.g.neovide_confirm_quit = true
