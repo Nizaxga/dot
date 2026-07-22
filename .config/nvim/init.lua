@@ -36,6 +36,7 @@ vim.cmd.packadd("nvim.tohtml")
 vim.cmd.packadd("matchit")
 vim.pack.add({
     { src = "https://github.com/nvim-telescope/telescope.nvim" },
+    { src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
     { src = "https://github.com/stevearc/oil.nvim" },
@@ -196,33 +197,121 @@ require('oil').setup({
         ["<C-h>"] = false,
     }
 })
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-require("telescope").setup({
+local telescope_action = require("telescope.actions")
+local telescope_action_state = require("telescope.actions.state")
+local telescope_builtin = require("telescope.builtin")
+local ivy = require("telescope.themes").get_ivy()
+local telescope = require("telescope")
+telescope.setup({
     defaults = {
         path_display = { "smart" },
         mappings = {
             i = {
                 ["<C-y>"] = function(prompt_bufnr)
-                    local selection = action_state.get_selected_entry()
+                    local selection = telescope_action_state.get_selected_entry()
                     vim.fn.setreg("+", selection.path)
                     print("Copied path: " .. selection.path)
-                    actions.close(prompt_bufnr)
+                    telescope_action.close(prompt_bufnr)
                 end,
             },
             n = {
                 ["<C-y>"] = function(prompt_bufnr)
-                    local selection = action_state.get_selected_entry()
+                    local selection = telescope_action_state.get_selected_entry()
                     vim.fn.setreg("+", selection.path)
                     print("Copied path: " .. selection.path)
-                    actions.close(prompt_bufnr)
+                    telescope_action.close(prompt_bufnr)
                 end,
             },
         },
     },
+    extensions = {
+        ["ui-select"] = require("telescope.themes").get_ivy({}),
+    },
 })
-local telescope_builtin = require("telescope.builtin")
-local ivy = require("telescope.themes").get_ivy()
+telescope.load_extension("ui-select")
+local projects_path = vim.fn.stdpath("config") .. "/projects.json"
+
+local function ensure_projects_file()
+    local dir = vim.fn.fnamemodify(projects_path, ":h")
+    if vim.fn.isdirectory(dir) == 0 then
+        vim.fn.mkdir(dir, "p")
+    end
+    if vim.fn.filereadable(projects_path) == 0 then
+        vim.fn.writefile({ "[]" }, projects_path)
+    end
+end
+
+local function read_projects()
+    ensure_projects_file()
+    local lines = vim.fn.readfile(projects_path)
+    local content = table.concat(lines, "\n")
+    if content == "" then return {} end
+    local ok, result = pcall(vim.json.decode, content)
+    if ok and type(result) == "table" then
+        return result
+    end
+    vim.notify("Failed to parse projects.json: " .. tostring(result), vim.log.levels.ERROR)
+    return {}
+end
+
+local function write_projects(projects)
+    if #projects == 0 then
+        vim.fn.writefile({ "[]" }, projects_path)
+        return
+    end
+    local lines = { "[" }
+    for i, p in ipairs(projects) do
+        local ok, name_enc = pcall(vim.json.encode, p.name)
+        local ok2, path_enc = pcall(vim.json.encode, p.path)
+        if not (ok and ok2) then
+            vim.notify("Failed to encode project entry", vim.log.levels.ERROR)
+            return
+        end
+        local comma = (i < #projects) and "," or ""
+        table.insert(lines, string.format('  { "name": %s, "path": %s }%s', name_enc, path_enc, comma))
+    end
+    table.insert(lines, "]")
+    vim.fn.writefile(lines, projects_path)
+end
+
+local function open_project()
+    local pickers = require("telescope.pickers")
+    local finders = require("telescope.finders")
+    local conf = require("telescope.config").values
+
+    local projects = read_projects()
+    if #projects == 0 then
+        vim.notify("No projects yet. Use :AddProject", vim.log.levels.WARN)
+        return
+    end
+
+    pickers.new(ivy, {
+        prompt_title = "Projects",
+        finder = finders.new_table({
+            results = projects,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry.name,
+                    ordinal = entry.name,
+                }
+            end,
+        }),
+        sorter = conf.generic_sorter({}),
+        attach_mappings = function(prompt_bufnr, _)
+            telescope_action.select_default:replace(function()
+                telescope_action.close(prompt_bufnr)
+                local selection = telescope_action_state.get_selected_entry()
+                local path = vim.fn.expand(selection.value.path)
+                vim.fn.chdir(path)
+                require("oil").open(path)
+            end)
+            return true
+        end,
+    }):find()
+end
+
+
 vim.g.compile_mode = {
     input_word_completion = true,
     bang_expansion = true,
@@ -296,6 +385,7 @@ map.set("n", "<leader>xx", function() telescope_builtin.diagnostics(ivy) end)
 map.set("n", "gR", function() telescope_builtin.lsp_references(ivy) end)
 map.set("n", "gI", function() telescope_builtin.lsp_implementations(ivy) end)
 map.set("n", "gD", function() telescope_builtin.lsp_definitions(ivy) end)
+map.set("n", "<leader>fp", open_project)
 local neogit = require("neogit")
 neogit.setup {
     integrations = {
@@ -362,7 +452,7 @@ vim.api.nvim_create_user_command("PackUpdate", function()
     vim.pack.update()
 end, { desc = "Update Packages" })
 
-local function pack_clean()
+vim.api.nvim_create_user_command("PackClean", function()
     local active_plugins = {}
     local unused_plugins = {}
     for _, plugin in ipairs(vim.pack.get()) do
@@ -381,9 +471,74 @@ local function pack_clean()
     if choice == 1 then
         vim.pack.del(unused_plugins)
     end
+end, { desc = "Clean Unused Packages" })
+
+vim.api.nvim_create_user_command("AddProject", function()
+    vim.ui.input({ prompt = "Project name: " }, function(name)
+        if not name or name == "" then
+            return
+        end
+
+        local path = vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
+        local projects = read_projects()
+
+        for _, p in ipairs(projects) do
+            if p.path == path then
+                vim.notify("Project already exists: " .. p.name, vim.log.levels.WARN)
+                return
+            end
+        end
+
+        table.insert(projects, { name = name, path = path })
+        write_projects(projects)
+        vim.notify("Added project: " .. name .. " -> " .. path)
+    end)
+end, { desc = "Add current dir as project" })
+vim.api.nvim_create_user_command("RemoveProject", function()
+    local pickers = require("telescope.pickers")
+    local finders = require("telescope.finders")
+    local conf = require("telescope.config").values
+
+    local projects = read_projects()
+    if #projects == 0 then
+        vim.notify("No projects yet. Use :AddProject", vim.log.levels.WARN)
+        return
+    end
+    pickers.new(ivy, {
+        prompt_title = "Remove Project",
+        finder = finders.new_table({
+            results = projects,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry.name,
+                    ordinal = entry.name,
+                }
+            end,
+        }),
+        sorter = conf.generic_sorter({}),
+        attach_mappings = function(prompt_bufnr, _)
+            telescope_action.select_default:replace(function()
+                local selection = telescope_action_state.get_selected_entry()
+                telescope_action.close(prompt_bufnr)
+
+                local target = selection.value
+                local remaining = {}
+                for _, p in ipairs(projects) do
+                    if p.path ~= target.path then
+                        table.insert(remaining, p)
+                    end
+                end
+
+                write_projects(remaining)
+                vim.notify("Removed project: " .. target.name)
+            end)
+            return true
+        end,
+    }):find()
 end
-vim.api.nvim_create_user_command("PackClean", pack_clean, { desc = "Clean Unused Packages" })
-vim.o.guifont = "IosevkaNL-Nice:h17"
+, { desc = "Remove a project from the list" })
+vim.o.guifont = "IosevkaNL-Nice:h15"
 map.set("n", "<C-=>", function()
     vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1
 end)
