@@ -45,6 +45,7 @@ vim.pack.add({
     { src = "https://github.com/sindrets/diffview.nvim" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/mason-org/mason.nvim" },
+    { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
     { src = "https://github.com/neogitorg/neogit" },
     { src = "https://github.com/m00qek/baleia.nvim" },
     { src = "https://github.com/brenoprata10/nvim-highlight-colors" },
@@ -95,6 +96,16 @@ local cmp = require('blink.cmp').setup({
 })
 require('nvim-highlight-colors').setup({})
 require('mason').setup()
+require("mason-lspconfig").setup {
+    ensure_installed = {
+        "rust_analyzer",
+        "clangd",
+        "lua_ls",
+        "pyright",
+        "ruff",
+        "ts_ls",
+    },
+}
 require('gitsigns').setup {
     signs                        = {
         add = { text = "▎" },
@@ -164,6 +175,8 @@ require('gruber-darker').setup({
     },
 })
 vim.cmd.colorscheme("gruber-darker")
+
+vim.api.nvim_set_hl(0, "OilDirHidden", { link = "GruberDarkerNiagaraBold" })
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
@@ -395,18 +408,6 @@ neogit.setup {
     diff_viewer = "diffview",
     use_icons = false
 }
-vim.lsp.enable({
-    "rust_analyzer",
-    "clangd",
-    -- "harper_ls",
-    "lua_ls",
-    "pyright",
-    "ruff",
-    "ts_ls",
-    "gopls",
-    "bashls",
-    "texlab",
-})
 vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
@@ -538,20 +539,3 @@ vim.api.nvim_create_user_command("RemoveProject", function()
     }):find()
 end
 , { desc = "Remove a project from the list" })
-vim.o.guifont = "IosevkaNL-Nice:h15"
-map.set("n", "<C-=>", function()
-    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1
-end)
-map.set("n", "<C-->", function()
-    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1
-end)
-map.set("n", "<C-0>", function()
-    vim.g.neovide_scale_factor = 1.0
-end)
-vim.g.neovide_progress_bar_enabled = false
-vim.g.neovide_cursor_animation_length = 0
-vim.g.neovide_scroll_animation_length = 0.1
-vim.g.neovide_position_animation_length = 0
-vim.g.neovide_hide_mouse_when_typing = true
-vim.g.neovide_cursor_antialiasing = true
-vim.g.neovide_confirm_quit = true
