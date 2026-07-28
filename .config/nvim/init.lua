@@ -40,7 +40,6 @@ vim.pack.add({
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
     { src = "https://github.com/stevearc/oil.nvim" },
-    { src = "https://github.com/ej-shafran/compile-mode.nvim" },
     { src = "https://github.com/nvim-mini/mini.pairs" },
     { src = "https://github.com/sindrets/diffview.nvim" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
@@ -61,7 +60,11 @@ local cmp = require('blink.cmp').setup({
         ['<C-n>'] = { 'show', 'select_next', 'fallback' },
         ['<CR>'] = { 'select_and_accept', 'fallback' },
     },
-    completion = { documentation = { auto_show = false } },
+    completion = {
+        menu = { scrollbar = false },
+        documentation = { auto_show = false },
+        ghost_text = { enabled = true }
+    },
     sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
     appearance = {
         nerd_font_variant = 'none',
@@ -182,16 +185,6 @@ vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
 vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartz" })
 vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "GruberDarkerNiagara" })
-vim.api.nvim_create_autocmd("FileType", {
-    callback = function()
-        local hls = vim.api.nvim_get_hl(0, {})
-        for name, _ in pairs(hls) do
-            if name:match("[Ss]tatement") then
-                vim.api.nvim_set_hl(0, name, { link = "GruberDarkerYellowBold" })
-            end
-        end
-    end,
-})
 
 require('mini.pairs').setup()
 require('oil').setup({
@@ -325,12 +318,6 @@ local function open_project()
 end
 
 
-vim.g.compile_mode = {
-    input_word_completion = true,
-    bang_expansion = true,
-    default_command = "",
-    baleia_setup = true,
-}
 map.set({ "n", "x" }, "j", "gj")
 map.set({ "n", "x" }, "k", "gk")
 map.set({ "n", "x" }, "x", '"_x')
@@ -344,7 +331,6 @@ map.set("n", "<C-j>", "<C-w>j")
 map.set("n", "<C-k>", "<C-w>k")
 map.set("n", "<C-h>", "<C-w>h")
 map.set("n", "<C-l>", "<C-w>l")
-map.set("n", "<leader>bd", "<cmd>bnext | bd#<cr>")
 map.set("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -363,8 +349,8 @@ map.set("n", "<leader>e", "<cmd>Oil<cr>")
 map.set("n", "<leader>u", "<cmd>Undotree<cr>")
 map.set("n", "n", "nzzzv")
 map.set("n", "N", "Nzzzv")
-map.set("n", "<leader>C", "<cmd>Compile<cr>")
-map.set("n", "<leader>R", "<cmd>Recompile<cr>")
+map.set("n", "*", "*zzzv")
+map.set("n", "#", "#zzzv")
 map.set("n", "<leader>yp", function()
     local path = vim.fn.expand("%:p")
     vim.fn.setreg("+", path)
@@ -391,6 +377,7 @@ map.set("n", "<leader>/", function()
         additional_args = { "--glob=!.git/" }
     }))
 end)
+map.set("n", "<leader>fw", function() telescope_builtin.grep_string(ivy) end)
 map.set("n", "<leader>,", function() telescope_builtin.buffers(ivy) end)
 map.set("n", "<leader>fr", function() telescope_builtin.oldfiles(ivy) end)
 map.set("n", "<leader>fh", function() telescope_builtin.help_tags(ivy) end)
