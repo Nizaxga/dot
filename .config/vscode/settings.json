@@ -14,7 +14,7 @@
     "editor.multiCursorModifier": "ctrlCmd",
     "editor.tokenColorCustomizations": { "textMateRules": [ { "scope": "constant.numeric", "settings": { "foreground": "#9e95c7" } } ] },
     "terminal.integrated.fontSize": 15,
-    "terminal.integrated.fontFamily": "IosevkaNL-Nice",
+    "terminal.integrated.fontFamily": "IosevkaNLNice Nerd Font",
     "workbench.colorTheme": "Tsoding Emacs Gruber Minimal",
     "workbench.iconTheme": "vscode-icons",
     "workbench.sideBar.location": "right",
