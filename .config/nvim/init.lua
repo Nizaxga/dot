@@ -186,7 +186,19 @@ vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
 vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartz" })
 vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "GruberDarkerNiagara" })
 
-require('mini.pairs').setup()
+require('mini.pairs').setup({
+    mappings = {
+        ['('] = { action = 'open', pair = '()', neigh_pattern = '^[^\\][^%w]' },
+        ['['] = { action = 'open', pair = '[]', neigh_pattern = '^[^\\][^%w]' },
+        ['{'] = { action = 'open', pair = '{}', neigh_pattern = '^[^\\][^%w]' },
+        [')'] = { action = 'close', pair = '()', neigh_pattern = '^[^\\]' },
+        [']'] = { action = 'close', pair = '[]', neigh_pattern = '^[^\\]' },
+        ['}'] = { action = 'close', pair = '{}', neigh_pattern = '^[^\\]' },
+        ['"'] = { action = 'closeopen', pair = '""', neigh_pattern = '^[^%w\\][^%w]', register = { cr = false } },
+        ["'"] = { action = 'closeopen', pair = "''", neigh_pattern = '^[^%w\\][^%w]', register = { cr = false } },
+        ['`'] = { action = 'closeopen', pair = '``', neigh_pattern = '^[^%w\\][^%w]', register = { cr = false } },
+    },
+})
 require('oil').setup({
     default_file_explorer = true,
     columns = {
@@ -359,9 +371,9 @@ end, { desc = "Yank absolute buffer path" })
 map.set("n", "<leader>fc", function()
     vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua")
 end)
-map.set("n", '<leader>ud', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
-map.set('n', '<leader>uh', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
-map.set('n', '<leader>k', function() telescope_builtin.builtin(vim.tbl_extend("force", ivy, { previewer = false, })) end)
+map.set("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
+map.set("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
+map.set("n", "<C-k>", function() telescope_builtin.builtin(vim.tbl_extend("force", ivy, { previewer = false, })) end)
 map.set("n", "<leader><leader>", function()
     telescope_builtin.find_files(vim.tbl_extend("force", ivy, {
         previewer = false,
@@ -408,6 +420,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 vim.api.nvim_create_autocmd("BufReadPost", {
     callback = function(event)
+        vim.b[event.buf].format_on_save = false
         local exclude = { "gitcommit" }
         local buf = event.buf
         if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].vim_last_loc then
@@ -426,9 +439,9 @@ local function lsp_format(bufnr)
 end
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*",
-    callback = function(ev)
-        if vim.b[ev.buf].format_on_save ~= false then
-            lsp_format(ev.buf)
+    callback = function(event)
+        if vim.b[event.buf].format_on_save then
+            lsp_format(event.buf)
         end
     end,
 })
