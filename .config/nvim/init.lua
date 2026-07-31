@@ -4,7 +4,6 @@ vim.g.maplocalleader = "\\"
 vim.o.wrap = false
 vim.o.mouse = "a"
 vim.o.clipboard = "unnamedplus"
-vim.o.winborder = "rounded"
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.o.expandtab = true
@@ -47,7 +46,6 @@ vim.pack.add({
     { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
     { src = "https://github.com/neogitorg/neogit" },
     { src = "https://github.com/m00qek/baleia.nvim" },
-    { src = "https://github.com/brenoprata10/nvim-highlight-colors" },
     { src = 'https://github.com/saghen/blink.lib' },
     {
         src = 'https://github.com/saghen/blink.cmp',
@@ -97,16 +95,11 @@ local cmp = require('blink.cmp').setup({
         }
     }
 })
-require('nvim-highlight-colors').setup({})
 require('mason').setup()
 require("mason-lspconfig").setup {
     ensure_installed = {
         "rust_analyzer",
-        "clangd",
         "lua_ls",
-        "pyright",
-        "ruff",
-        "ts_ls",
     },
 }
 require('gitsigns').setup {
@@ -340,7 +333,6 @@ map.set("t", "<Esc>", "<C-\\><C-n>")
 map.set("x", "<", "<gv")
 map.set("x", ">", ">gv")
 map.set("n", "<C-j>", "<C-w>j")
-map.set("n", "<C-k>", "<C-w>k")
 map.set("n", "<C-h>", "<C-w>h")
 map.set("n", "<C-l>", "<C-w>l")
 map.set("n", "<leader>bo", function()
@@ -405,8 +397,10 @@ neogit.setup {
         diffview = true,
     },
     diff_viewer = "diffview",
-    use_icons = false
 }
+require("diffview").setup({
+    use_icons = false
+})
 vim.diagnostic.config({
     underline = true,
     update_in_insert = false,

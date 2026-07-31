@@ -31,20 +31,27 @@
     "explorer.autoReveal": false,
     "vim.incsearch": true,
     "vim.useSystemClipboard": true,
-    "vim.useCtrlKeys": true,
     "vim.hlsearch": true,
     "vim.leader": "<space>",
     "vim.enableNeovim": true,
+    "vim.handleKeys": {
+        "<C-k>": false,
+        "<C-j>": false,
+        "<C-b>": false,
+        "<C-d>": false,
+        "<C-u>": false
+    },
     "vim.normalModeKeyBindingsNonRecursive": [
         { "before": [ "H" ], "commands": [ "workbench.action.previousEditor" ] },
         { "before": [ "L" ], "commands": [ "workbench.action.nextEditor" ] },
-        { "before": [ "leader", "|" ], "commands": [ ":vsplit" ] },
-        { "before": [ "leader", "-" ], "commands": [ ":split" ] },
+        { "before": [ "<leader>", "|" ], "commands": [ ":vsplit" ] },
+        { "before": [ "<leader>", "-" ], "commands": [ ":split" ] },
+        { "before": ["+"], "commands": ["workbench.action.increaseViewSize"] },
+        { "before": ["-"], "commands": ["workbench.action.decreaseViewSize"] },
         { "before": [ "ctrl+h" ], "commands": [ "workbench.action.focusLeftGroup" ] },
         { "before": [ "ctrl+j" ], "commands": [ "workbench.action.focusBelowGroup" ] },
         { "before": [ "ctrl+k" ], "commands": [ "workbench.action.focusAboveGroup" ] },
         { "before": [ "ctrl+l" ], "commands": [ "workbench.action.focusRightGroup" ] },
-        { "before": [ "<leader>", "e" ], "commands": [ "workbench.view.explorer" ] },
         { "before": [ "x" ], "after": [ "\"", "_", "x" ] },
         { "before": [ "c" ], "after": [ "\"", "_", "c" ] },
         { "before": [ "Y" ], "after": [ "y", "$" ] },
@@ -54,6 +61,8 @@
         { "before": [ "N" ], "after": [ "N", "z", "z", "z", "v" ] },
         { "before": [ "*" ], "after": [ "*", "z", "z", "z", "v" ] },
         { "before": [ "#" ], "after": [ "#", "z", "z", "z", "v" ] },
+        { "before": ["g", "I"], "commands": ["editor.action.goToImplementation"] },
+        { "before": ["g", "R"], "commands": ["editor.action.goToReferences"] }
     ],
     "vim.visualModeKeyBindingsNonRecursive": [
         { "before": [ "x" ], "after": [ "\"", "_", "x" ] },
@@ -63,7 +72,7 @@
     ],
     "extensions.experimental.affinity": {
         "chat.agentsControl.enabled": 0,
-        "vscodevim.vim": 1,
+        "vscodevim.vim": 1
     },
     "chat.disableAIFeatures": true,
     "chat.agentsControl.enabled": "hidden",
@@ -75,5 +84,5 @@
     "notebook.output.scrolling": true,
     "notebook.output.minimalErrorRendering": true,
     "notebook.lineNumbers": "on",
-    "notebook.displayOrder": [ "image/png", "text/html", "text/plain", "application/vnd.jupyter.widget-view+json" ],
+    "notebook.displayOrder": [ "image/png", "text/html", "text/plain", "application/vnd.jupyter.widget-view+json" ]
 }
