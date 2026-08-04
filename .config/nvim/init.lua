@@ -61,9 +61,8 @@ local cmp = require('blink.cmp').setup({
     completion = {
         menu = { scrollbar = false },
         documentation = { auto_show = false },
-        ghost_text = { enabled = true }
     },
-    sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
+    sources = { default = { 'buffer', 'snippets', 'lsp', 'path' } },
     appearance = {
         nerd_font_variant = 'none',
         kind_icons = {
@@ -175,9 +174,9 @@ vim.cmd.colorscheme("gruber-darker")
 vim.api.nvim_set_hl(0, "OilDirHidden", { link = "GruberDarkerNiagaraBold" })
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
-vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
-vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartz" })
-vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "GruberDarkerNiagara" })
+-- vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
+-- vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartz" })
+-- vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "GruberDarkerNiagara" })
 
 require('mini.pairs').setup({
     mappings = {
@@ -414,7 +413,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 vim.api.nvim_create_autocmd("BufReadPost", {
     callback = function(event)
-        vim.b[event.buf].format_on_save = false
+        vim.b[event.buf].format_on_save = true
         local exclude = { "gitcommit" }
         local buf = event.buf
         if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].vim_last_loc then
