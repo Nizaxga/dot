@@ -11,7 +11,7 @@ vim.o.modeline = false
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
-vim.o.textwidth = 120
+vim.o.textwidth = 100
 vim.o.scrolloff = 4
 vim.o.showtabline = 1
 vim.o.smoothscroll = false
@@ -27,12 +27,15 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.foldmethod = "manual"
 vim.o.pumheight = 8
+vim.o.autoread = true
+vim.o.undofile = true
 vim.o.tags = "./tags;,tags" -- `ctags -R .`
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nohlsearch")
 vim.cmd.packadd("nvim.difftool")
 vim.cmd.packadd("nvim.tohtml")
 vim.cmd.packadd("matchit")
+vim.cmd.packadd("cfilter")
 vim.pack.add({
     { src = "https://github.com/nvim-telescope/telescope.nvim" },
     { src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
@@ -98,6 +101,7 @@ require('mason').setup()
 require("mason-lspconfig").setup {
     ensure_installed = {
         "rust_analyzer",
+        "clangd",
         "lua_ls",
     },
 }
@@ -156,6 +160,11 @@ require('gitsigns').setup {
         end
         map("<leader>gB", gs.blame, "Blame Buffer")
         map("<leader>gd", gs.diffthis, "Diff This")
+        map("]c", gs.next_hunk, "Next Hunk")
+        map("[c", gs.prev_hunk, "Prev Hunk")
+        map("d<S-o>", gs.stage_hunk, "Stage Hunk")
+        map("dP", gs.reset_hunk, "Reset Hunk")
+        map("do", gs.preview_hunk, "Preview Hunk")
     end,
 }
 local map = vim.keymap
@@ -170,13 +179,9 @@ require('gruber-darker').setup({
     },
 })
 vim.cmd.colorscheme("gruber-darker")
-
 vim.api.nvim_set_hl(0, "OilDirHidden", { link = "GruberDarkerNiagaraBold" })
 vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
--- vim.api.nvim_set_hl(0, "@lsp.type.class", { link = "GruberDarkerWisteria" })
--- vim.api.nvim_set_hl(0, "@lsp.type.type", { link = "GruberDarkerQuartz" })
--- vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "GruberDarkerNiagara" })
 
 require('mini.pairs').setup({
     mappings = {
@@ -204,7 +209,9 @@ require('oil').setup({
     prompt_save_on_select_new_entry = false,
     view_options = { show_hidden = true },
     keymaps = {
+        ["<C-l>"] = false,
         ["<C-h>"] = false,
+        ["<S-r>"] = "actions.refresh",
     }
 })
 local telescope_action = require("telescope.actions")
