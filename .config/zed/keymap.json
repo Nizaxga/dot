@@ -1,18 +1,21 @@
 [
   {
-    "context": "Workspace",
+    "context": "Workspace || Pane",
     "bindings": {
       "cmd-shift-g": "git_panel::ToggleFocus",
     },
   },
   {
-    "context": "Pane",
+    "context": "VimControl && !menu",
     "bindings": {
-      "cmd-shift-g": "git_panel::ToggleFocus",
-    },
+      "j": ["workspace::SendKeystrokes", "g j"],
+      "k": ["workspace::SendKeystrokes", "g k"],
+      "x": ["workspace::SendKeystrokes", "\" _ x"],
+      "c": ["workspace::SendKeystrokes", "\" _ c"]
+    }
   },
   {
-    "context": "Editor && vim_mode == normal",
+    "context": "vim_mode == normal && !menu",
     "bindings": {
       "space f": "file_finder::Toggle",
       "space /": "pane::DeploySearch",
@@ -24,6 +27,22 @@
       "ctrl-j": "workspace::ActivatePaneDown",
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-l": "workspace::ActivatePaneRight",
-    },
+      "n": ["workspace::SendKeystrokes", "n z z"] ,
+      "N": ["workspace::SendKeystrokes", "N z z"] ,
+      "*": ["workspace::SendKeystrokes", "* z z"] ,
+      "#": ["workspace::SendKeystrokes", "# z z"] ,
+      "shift-y": ["workspace::SendKeystrokes", "y $"],
+      "+": "vim::ResizePaneRight",
+      "-": "vim::ResizePaneLeft"
+    }
+  },
+  {
+    "context": "vim_mode == visual && !menu",
+    "bindings": {
+      "s": null,
+      "s a": "vim::PushAddSurrounds",
+      ">": ["workspace::SendKeystrokes", "> g v"],
+      "<": ["workspace::SendKeystrokes", "< g v"]
+    }
   },
 ]

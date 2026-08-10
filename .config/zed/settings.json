@@ -1,8 +1,20 @@
 {
   "base_keymap": "VSCode",
+  "cursor_blink": false,
+  "title_bar": {
+    "show_onboarding_banner": false,
+    "show_user_picture": false,
+    "show_sign_in": false
+  },
   "vim_mode": true,
+  "relative_line_numbers": "enabled",
+  "scrollbar": { "show": "never" },
   "vim": {
-    "toggle_relative_line_numbers": true,
+    "use_smartcase_find": true,
+  },
+  "command_aliases": {
+    "yp": "workspace::CopyPath",
+    "open": "editor::RevealInFileManager",
   },
   "experimental.theme_overrides": {
     "syntax": {
@@ -14,18 +26,20 @@
   },
   "icon_theme": {
     "mode": "dark",
-    "light": "Zed (Default)",
+    "light": "Colored Zed Icons Theme Light",
     "dark": "Colored Zed Icons Theme Dark",
   },
-  "disable_ai": false,
-  "ui_font_size": 17,
-  "buffer_font_size": 17,
+  "disable_ai": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
   "ui_font_family": "IosevkaNL-Nice",
   "buffer_font_family": "IosevkaNL-Nice",
-  "theme": "Gruber Darker",
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "Gruber Darker"
+  },
   "diagnostics": {
-    "inline": {
-      "enabled": true,
-    },
+    "inline": { "enabled": true, },
   },
 }
