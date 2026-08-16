@@ -1,7 +1,8 @@
 {
-    "editor.fontSize": 15,
+    "editor.fontSize": 16,
+    "editor.formatOnSave": true,
     "editor.wordWrap": "off",
-    "editor.wordWrapColumn": 120,
+    "editor.wordWrapColumn": 80,
     "editor.lineNumbers": "relative",
     "editor.inlayHints.enabled": "off",
     "editor.minimap.enabled": false,
@@ -12,24 +13,48 @@
     "editor.scrollbar.vertical": "hidden",
     "editor.bracketPairColorization.enabled": false,
     "editor.multiCursorModifier": "ctrlCmd",
-    "editor.tokenColorCustomizations": { "textMateRules": [ { "scope": "constant.numeric", "settings": { "foreground": "#9e95c7" } } ] },
-    "terminal.integrated.fontSize": 15,
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "name": "numeric colorTheme",
+                "scope": "constant.numeric",
+                "settings": {
+                    "foreground": "#9e95c7"
+                }
+            },
+            {
+                "name": "bold all yellow",
+                "scope": [
+                    "keyword",
+                    "storage",
+                    "variable.language",
+                    "constant.language",
+                    "keyword.other.unit"
+                ],
+                "settings": {
+                    "fontStyle": "bold"
+                }
+            }
+        ]
+    },
+    "terminal.integrated.fontSize": 16,
     "terminal.integrated.fontFamily": "IosevkaNLNice Nerd Font",
-    "workbench.colorTheme": "Tsoding Emacs Gruber Minimal",
-    "workbench.iconTheme": "vscode-icons",
     "workbench.sideBar.location": "right",
+    "workbench.iconTheme": "vscode-icons",
     "workbench.layoutControl.enabled": false,
     "workbench.browser.showInTitleBar": false,
     "workbench.startupEditor": "none",
     "workbench.editor.enablePreview": false,
     "workbench.editor.editorActionsLocation": "hidden",
     "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.colorTheme": "Tsoding Emacs Gruber Minimal",
+    "workbench.experimental.modernUI": false,
     "window.titleBarStyle": "custom",
-    "window.commandCenter": false,
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     "explorer.autoReveal": false,
     "vim.incsearch": true,
+    "vim.highlightedyank.enable": true,
     "vim.useSystemClipboard": true,
     "vim.hlsearch": true,
     "vim.leader": "<space>",
@@ -38,51 +63,273 @@
         "<C-k>": false,
         "<C-j>": false,
         "<C-b>": false,
-        "<C-d>": false,
-        "<C-u>": false
+        "<C-r>": false,
     },
     "vim.normalModeKeyBindingsNonRecursive": [
-        { "before": [ "H" ], "commands": [ "workbench.action.previousEditor" ] },
-        { "before": [ "L" ], "commands": [ "workbench.action.nextEditor" ] },
-        { "before": [ "<leader>", "|" ], "commands": [ ":vsplit" ] },
-        { "before": [ "<leader>", "-" ], "commands": [ ":split" ] },
-        { "before": ["+"], "commands": ["workbench.action.increaseViewSize"] },
-        { "before": ["-"], "commands": ["workbench.action.decreaseViewSize"] },
-        { "before": [ "ctrl+h" ], "commands": [ "workbench.action.focusLeftGroup" ] },
-        { "before": [ "ctrl+j" ], "commands": [ "workbench.action.focusBelowGroup" ] },
-        { "before": [ "ctrl+k" ], "commands": [ "workbench.action.focusAboveGroup" ] },
-        { "before": [ "ctrl+l" ], "commands": [ "workbench.action.focusRightGroup" ] },
-        { "before": [ "x" ], "after": [ "\"", "_", "x" ] },
-        { "before": [ "c" ], "after": [ "\"", "_", "c" ] },
-        { "before": [ "Y" ], "after": [ "y", "$" ] },
-        { "before": [ "j" ], "after": [ "g", "j" ] },
-        { "before": [ "k" ], "after": [ "g", "k" ] },
-        { "before": [ "n" ], "after": [ "n", "z", "z", "z", "v" ] },
-        { "before": [ "N" ], "after": [ "N", "z", "z", "z", "v" ] },
-        { "before": [ "*" ], "after": [ "*", "z", "z", "z", "v" ] },
-        { "before": [ "#" ], "after": [ "#", "z", "z", "z", "v" ] },
-        { "before": ["g", "I"], "commands": ["editor.action.goToImplementation"] },
-        { "before": ["g", "R"], "commands": ["editor.action.goToReferences"] }
+        {
+            "before": [
+                "]",
+                "c"
+            ],
+            "commands": [
+                "editor.action.dirtydiff.next"
+            ]
+        },
+        {
+            "before": [
+                "[",
+                "c"
+            ],
+            "commands": [
+                "editor.action.dirtydiff.prev"
+            ]
+        },
+        {
+            "before": [
+                "H"
+            ],
+            "commands": [
+                "workbench.action.previousEditor"
+            ]
+        },
+        {
+            "before": [
+                "L"
+            ],
+            "commands": [
+                "workbench.action.nextEditor"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "|"
+            ],
+            "commands": [
+                ":vsplit"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "-"
+            ],
+            "commands": [
+                ":split"
+            ]
+        },
+        {
+            "before": [
+                "+"
+            ],
+            "commands": [
+                "workbench.action.increaseViewSize"
+            ]
+        },
+        {
+            "before": [
+                "-"
+            ],
+            "commands": [
+                "workbench.action.decreaseViewSize"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+h"
+            ],
+            "commands": [
+                "workbench.action.focusLeftGroup"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+j"
+            ],
+            "commands": [
+                "workbench.action.focusBelowGroup"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+k"
+            ],
+            "commands": [
+                "workbench.action.focusAboveGroup"
+            ]
+        },
+        {
+            "before": [
+                "ctrl+l"
+            ],
+            "commands": [
+                "workbench.action.focusRightGroup"
+            ]
+        },
+        {
+            "before": [
+                "x"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "x"
+            ]
+        },
+        {
+            "before": [
+                "c"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "c"
+            ]
+        },
+        {
+            "before": [
+                "Y"
+            ],
+            "after": [
+                "y",
+                "$"
+            ]
+        },
+        {
+            "before": [
+                "j"
+            ],
+            "after": [
+                "g",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "k"
+            ],
+            "after": [
+                "g",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "n"
+            ],
+            "after": [
+                "n",
+                "z",
+                "z",
+                "z",
+                "v"
+            ]
+        },
+        {
+            "before": [
+                "N"
+            ],
+            "after": [
+                "N",
+                "z",
+                "z",
+                "z",
+                "v"
+            ]
+        },
+        {
+            "before": [
+                "*"
+            ],
+            "after": [
+                "*",
+                "z",
+                "z",
+                "z",
+                "v"
+            ]
+        },
+        {
+            "before": [
+                "#"
+            ],
+            "after": [
+                "#",
+                "z",
+                "z",
+                "z",
+                "v"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "I"
+            ],
+            "commands": [
+                "editor.action.goToImplementation"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "R"
+            ],
+            "commands": [
+                "editor.action.goToReferences"
+            ]
+        },
     ],
     "vim.visualModeKeyBindingsNonRecursive": [
-        { "before": [ "x" ], "after": [ "\"", "_", "x" ] },
-        { "before": [ "c" ], "after": [ "\"", "_", "c" ] },
-        { "before": [ ">" ], "commands": [ "editor.action.indentLines", "vim.reselectLastVisualSelection" ] },
-        { "before": [ "<" ], "commands": [ "editor.action.outdentLines", "vim.reselectLastVisualSelection" ] }
+        {
+            "before": [
+                "x"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "x"
+            ]
+        },
+        {
+            "before": [
+                "c"
+            ],
+            "after": [
+                "\"",
+                "_",
+                "c"
+            ]
+        },
+        {
+            "before": [
+                ">"
+            ],
+            "commands": [
+                "editor.action.indentLines",
+                "vim.reselectLastVisualSelection"
+            ]
+        },
+        {
+            "before": [
+                "<"
+            ],
+            "commands": [
+                "editor.action.outdentLines",
+                "vim.reselectLastVisualSelection"
+            ]
+        }
     ],
     "extensions.experimental.affinity": {
-        "chat.agentsControl.enabled": 0,
         "vscodevim.vim": 1
     },
-    "chat.disableAIFeatures": true,
     "chat.agentsControl.enabled": "hidden",
     "telemetry.feedback.enabled": false,
     "telemetry.editStats.enabled": false,
     "breadcrumbs.enabled": false,
     "extensions.autoUpdate": "off",
     "diffEditor.ignoreTrimWhitespace": true,
-    "notebook.output.scrolling": true,
-    "notebook.output.minimalErrorRendering": true,
+    "chat.disableAIFeatures": true,
     "notebook.lineNumbers": "on",
-    "notebook.displayOrder": [ "image/png", "text/html", "text/plain", "application/vnd.jupyter.widget-view+json" ]
+    "search.defaultViewMode": "tree",
 }

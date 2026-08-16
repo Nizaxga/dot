@@ -6,18 +6,38 @@
         "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
     },
     {
-        "key": "shift+cmd+g",
-        "command": "workbench.view.scm",
-        "when": "viewContainer.workbench.view.explorer.enabled"
+        "key": "shift+5",
+        "command": "explorer.newFile",
+        "when": "filesExplorerFocus && !inputFocus"
     },
     {
-        "key": "shift+cmd+j",
-        "command": "workbench.action.terminal.focusAtIndex1",
+        "key": "d",
+        "command": "explorer.newFolder",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    {
+        "key": "shift+d",
+        "command": "deleteFile",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    {
+        "key": "y",
+        "command": "filesExplorer.copy",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    {
+        "key": "p",
+        "command": "filesExplorer.paste",
+        "when": "filesExplorerFocus && !inputFocus"
+    },
+    {
+        "key": "shift+cmd+g",
+        "command": "workbench.view.scm",
         "when": "viewContainer.workbench.view.explorer.enabled"
     },
     {
         "key": "shift+k",
         "command": "editor.action.showHover",
         "when": "editorTextFocus && vim.mode == 'Normal'"
-    }
+    },
 ]

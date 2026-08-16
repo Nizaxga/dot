@@ -123,30 +123,30 @@ require('gitsigns').setup {
         untracked    = { text = '┆' },
     },
     signs_staged_enable          = true,
-    signcolumn                   = true,  -- Toggle with `:Gitsigns toggle_signs`
-    numhl                        = false, -- Toggle with `:Gitsigns toggle_numhl`
-    linehl                       = false, -- Toggle with `:Gitsigns toggle_linehl`
-    word_diff                    = false, -- Toggle with `:Gitsigns toggle_word_diff`
+    signcolumn                   = true,
+    numhl                        = false,
+    linehl                       = false,
+    word_diff                    = false,
     watch_gitdir                 = {
         follow_files = true
     },
     auto_attach                  = true,
     attach_to_untracked          = false,
-    current_line_blame           = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+    current_line_blame           = false,
     current_line_blame_opts      = {
         virt_text = true,
-        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+        virt_text_pos = 'eol',
         delay = 1000,
         ignore_whitespace = false,
         virt_text_priority = 100,
         use_focus = true,
     },
     current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
-    blame_formatter              = nil, -- Use default
+    blame_formatter              = nil,
     sign_priority                = 6,
     update_debounce              = 100,
-    status_formatter             = nil,   -- Use default
-    max_file_length              = 40000, -- Disable if file is longer than this (in lines)
+    status_formatter             = nil,
+    max_file_length              = 40000,
     preview_config               = {
         style = 'minimal',
         relative = 'cursor',
@@ -341,6 +341,7 @@ map.set("x", ">", ">gv")
 map.set("n", "<C-j>", "<C-w>j")
 map.set("n", "<C-h>", "<C-w>h")
 map.set("n", "<C-l>", "<C-w>l")
+map.set("n", "<C-k>", "<C-w>k")
 map.set("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -371,7 +372,6 @@ map.set("n", "<leader>fc", function()
 end)
 map.set("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map.set("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
-map.set("n", "<C-k>", function() telescope_builtin.builtin(vim.tbl_extend("force", ivy, { previewer = false, })) end)
 map.set("n", "<leader><leader>", function()
     telescope_builtin.find_files(vim.tbl_extend("force", ivy, {
         previewer = false,
