@@ -100,8 +100,6 @@ local cmp = require('blink.cmp').setup({
 require('mason').setup()
 require("mason-lspconfig").setup {
     ensure_installed = {
-        "rust_analyzer",
-        "clangd",
         "lua_ls",
     },
 }

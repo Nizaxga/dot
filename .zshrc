@@ -28,21 +28,3 @@ alias prime="~/.dotfiles/Scripts/primes.out"
 
 # fzf
 eval "$(fzf --zsh)"
-
-_fzf_comprun() {
-  local command=$1
-  shift
-  case "$command" in
-    vim)
-      fzf --preview 'bat -n --color=always --line-range :500 {}' \
-          --preview-window wrap-word "$@"
-      ;;
-    vi)
-      fzf --preview 'bat -n --color=always --line-range :500 {}' "$@"
-      ;;
-    *)
-      fzf "$@"
-      ;;
-  esac
-}
-
