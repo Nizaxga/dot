@@ -1,45 +1,86 @@
 {
-  "base_keymap": "VSCode",
-  "cursor_blink": false,
-  "title_bar": {
-    "show_onboarding_banner": false,
-    "show_user_picture": false,
-    "show_sign_in": false
-  },
-  "vim_mode": true,
-  "relative_line_numbers": "enabled",
-  "scrollbar": { "show": "never" },
-  "vim": {
-    "use_smartcase_find": true,
-  },
-  "command_aliases": {
-    "yp": "workspace::CopyPath",
-    "open": "editor::RevealInFileManager",
-  },
-  "experimental.theme_overrides": {
-    "syntax": {
-      "comment": { "font_style": "normal" },
-      "keyword": { "font_style": "normal" },
-      "string": { "font_style": "normal" },
-      "function": { "font_style": "normal" },
+    "format_on_save": "on",
+    "tab_size": 4,
+    "git": { "inline_blame": { "location": "status_bar" } },
+    "base_keymap": "VSCode",
+    "cursor_blink": false,
+    "title_bar": {
+        "show_onboarding_banner": false,
+        "show_user_picture": false,
+        "show_user_menu": false,
+        "show_sign_in": false,
     },
-  },
-  "icon_theme": {
-    "mode": "dark",
-    "light": "Colored Zed Icons Theme Light",
-    "dark": "Colored Zed Icons Theme Dark",
-  },
-  "disable_ai": true,
-  "ui_font_size": 16,
-  "buffer_font_size": 16,
-  "ui_font_family": "IosevkaNL-Nice",
-  "buffer_font_family": "IosevkaNL-Nice",
-  "theme": {
-    "mode": "dark",
-    "light": "One Light",
-    "dark": "Gruber Darker"
-  },
-  "diagnostics": {
-    "inline": { "enabled": true, },
-  },
+    "relative_line_numbers": "enabled",
+    "scrollbar": { "show": "never" },
+    "ui_font_family": "IosevkaNLNice Nerd Font",
+    "buffer_font_family": "IosevkaNLNice Nerd Font",
+    "terminal": {
+        "font_family": "IosevkaNLNice Nerd Font",
+    },
+    "vim_mode": true,
+    "disable_ai": true,
+    "icon_theme": "Colored Zed Icons Theme Dark",
+    "diagnostics": { "inline": { "enabled": true } },
+    "ui_font_size": 15,
+    "buffer_font_size": 15,
+    "theme": "Gruber Darker",
+    "current_line_highlight": "none",
+    // Personalize
+    "theme_overrides": {
+        "Gruber Darker": {
+            "text": "#d5d5d5",
+            "editor.foreground": "#d5d5d5",
+            "terminal.foreground": "#d5d5d5",
+            "terminal.ansi.black": "#181818",
+            "terminal.ansi.red": "#F43841",
+            "terminal.ansi.green": "#73D936",
+            "terminal.ansi.yellow": "#FFDD33",
+            "terminal.ansi.blue": "#96A6C8",
+            "terminal.ansi.magenta": "#9E95C7",
+            "terminal.ansi.cyan": "#95A99F",
+            "terminal.ansi.white": "#D5D5D5",
+            "terminal.ansi.bright_black": "#52494E",
+            "terminal.ansi.bright_red": "#F43841",
+            "terminal.ansi.bright_green": "#73D936",
+            "terminal.ansi.bright_yellow": "#FFDD33",
+            "terminal.ansi.bright_blue": "#96A6C8",
+            "terminal.ansi.bright_magenta": "#9E95C7",
+            "terminal.ansi.bright_cyan": "#95A99F",
+            "terminal.ansi.bright_white": "#FFFFFF",
+            "syntax": {
+                "attribute": { "font_style": "normal" },
+                "string": { "font_style": "normal" },
+                "operator": {
+                    "color": "#d5d5d5",
+                    "font_style": "normal",
+                    "font_weight": 400,
+                },
+                "punctuation": {
+                    "color": "#d5d5d5",
+                    "font_style": "normal",
+                    "font_weight": 400,
+                },
+                "tag": {
+                    "color": "#d5d5d5",
+                    "font_style": "normal",
+                    "font_weight": 400,
+                },
+                "variable": {
+                    "color": "#d5d5d5",
+                    "font_style": "normal",
+                    "font_weight": 400,
+                },
+                "number": {
+                    "color": "#9e95c7",
+                    "font_style": "normal",
+                    "font_weight": 400,
+                },
+                "type": {
+                    "color": "#95a99f",
+                    "font_style": "normal",
+                    "font_weight": 400,
+                },
+            },
+        },
+    },
 }
