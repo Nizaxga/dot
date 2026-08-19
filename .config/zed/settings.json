@@ -1,5 +1,6 @@
 {
     "format_on_save": "on",
+    "soft_wrap": "none",
     "tab_size": 4,
     "git": { "inline_blame": { "location": "status_bar" } },
     "base_keymap": "VSCode",
