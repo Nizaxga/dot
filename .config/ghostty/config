@@ -1,0 +1,21 @@
+# Ghostty Config
+theme = Gruber Darker
+macos-titlebar-style = hidden
+confirm-close-surface = false
+shell-integration-features = no-cursor
+cursor-style = block
+cursor-style-blink = true
+mouse-hide-while-typing = true
+scrollbar = never
+font-family = "IosevkaNLNice Nerd Font"
+font-size = 15
+font-thicken = true
+font-thicken-strength = 0
+alpha-blending = linear
+window-padding-x = 12
+window-padding-y = 12
+minimum-contrast = 1.1
+# background-opacity = 0.90
+# background-blur = true
+selection-background = #264f78
+selection-foreground = #cccccc
