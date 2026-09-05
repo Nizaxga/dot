@@ -4,6 +4,7 @@ vim.g.maplocalleader = "\\"
 vim.o.wrap = false
 vim.o.mouse = "a"
 vim.o.clipboard = "unnamedplus"
+vim.o.winborder = "rounded"
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.o.expandtab = true
