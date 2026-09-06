@@ -1,4 +1,8 @@
+-- my sweet baby
 require("vim._core.ui2").enable({ enable = true })
+
+-- options
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.o.wrap = false
@@ -50,11 +54,13 @@ vim.pack.add({
     -- utils
     "https://github.com/nvim-telescope/telescope.nvim",
     "https://github.com/nvim-telescope/telescope-ui-select.nvim",
-    "https://github.com/nvim-lua/plenary.nvim",
+    "https://github.com/nvim-lua/plenary.nvim", -- still don't know what you doing
     "https://github.com/blazkowolf/gruber-darker.nvim",
     "https://github.com/stevearc/oil.nvim",
     "https://github.com/windwp/nvim-autopairs",
+    "https://github.com/kylechui/nvim-surround",
     "https://github.com/m00qek/baleia.nvim",
+    "https://github.com/nvim-treesitter/nvim-treesitter",
     -- git stuff
     "https://github.com/sindrets/diffview.nvim",
     "https://github.com/lewis6991/gitsigns.nvim",
@@ -66,6 +72,9 @@ vim.pack.add({
     'https://github.com/saghen/blink.lib',
     { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range("*") },
 })
+
+-- plugin setup
+
 vim.g.baleia = require("baleia").setup({})
 vim.api.nvim_create_user_command("Colorize", function()
     vim.g.baleia.once(vim.api.nvim_get_current_buf())
@@ -175,9 +184,18 @@ require('gruber-darker').setup({
     },
 })
 vim.cmd.colorscheme("gruber-darker")
+vim.api.nvim_set_hl(0, "OilLink", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "OilDirHidden", { link = "GruberDarkerNiagaraBold" })
-vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
+vim.api.nvim_set_hl(0, "OilFileHidden", { link = "GruberDarkerFg0" })
+vim.api.nvim_set_hl(0, "GruberDarkerFg1", { link = "GruberDarkerFg0" })
+vim.api.nvim_set_hl(0, "GruberDarkerFg2", { link = "GruberDarkerFg0" })
 vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
+vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
+-- treesitter
+vim.api.nvim_set_hl(0, "@type.builtin", { link = "GruberDarkerQuartz" })
+vim.api.nvim_set_hl(0, "@property.cpp", { link = "GruberDarkerQuartz" })
+vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "GruberDarkerFg2" })
+
 require('oil').setup({
     default_file_explorer = true,
     columns = {
@@ -228,11 +246,13 @@ telescope.setup({
     },
 })
 telescope.load_extension("ui-select")
+
+-- Keymap
+
 map.set({ "n", "x" }, "j", "gj")
 map.set({ "n", "x" }, "k", "gk")
 map.set({ "n", "x" }, "x", '"_x')
 map.set({ "n", "x" }, "c", '"_c')
-map.set({ 'n', 'x' }, '<leader>r', function() vim.lsp.buf.rename() end)
 map.set('n', '<leader>ca', vim.lsp.buf.code_action)
 map.set("t", "<Esc>", "<C-\\><C-n>")
 map.set("x", "<", "<gv")
@@ -256,7 +276,6 @@ map.set("n", "-", "<cmd>vertical resize -5<cr>")
 map.set("n", "<leader>|", "<cmd>vsplit<cr>")
 map.set("n", "<leader>-", "<cmd>split<cr>")
 map.set("n", "<leader>e", "<cmd>Oil<cr>")
-map.set("n", "<leader>u", "<cmd>Undotree<cr>")
 map.set("n", "n", "nzzzv")
 map.set("n", "N", "Nzzzv")
 map.set("n", "*", "*zzzv")
@@ -271,6 +290,7 @@ map.set("n", "<leader>fc", function()
 end)
 map.set("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map.set("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
+map.set("x", "sa", "<Plug>(nvim-surround-visual)")
 map.set("n", "<leader><leader>", function()
     telescope_builtin.find_files(vim.tbl_extend("force", ivy_theme, {
         previewer = false,
@@ -295,7 +315,6 @@ map.set("n", "gA", function() telescope_builtin.lsp_references(ivy_theme) end)
 map.set("n", "gI", function() telescope_builtin.lsp_implementations(ivy_theme) end)
 map.set("n", "gD", function() telescope_builtin.lsp_definitions(ivy_theme) end)
 
-
 -- Auto Command
 
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -303,9 +322,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.highlight.on_yank()
     end,
 })
+
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = '*',
+    callback = function() pcall(vim.treesitter.start) end,
+})
+
 vim.api.nvim_create_autocmd("BufReadPost", {
     callback = function(event)
-        vim.b[event.buf].format_on_save = true
+        vim.b[event.buf].format_on_save = false
         local exclude = { "gitcommit" }
         local buf = event.buf
         if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].vim_last_loc then
@@ -322,6 +347,13 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 local function lsp_format(bufnr)
     vim.lsp.buf.format({ bufnr = bufnr, async = false, })
 end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        vim.b[args.buf].format_on_save = true
+    end,
+})
+
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*",
     callback = function(event)
@@ -330,6 +362,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         end
     end,
 })
+
 map.set("n", "<leader>=", function()
     vim.b.format_on_save = not (vim.b.format_on_save ~= false)
     vim.notify("Format on save: " .. (vim.b.format_on_save and "enabled" or "disabled"))
@@ -342,31 +375,26 @@ vim.api.nvim_create_user_command("PackUpdate", function()
 end, { desc = "Update Packages" })
 
 vim.api.nvim_create_user_command("PackClean", function()
-    local active_plugins = {}
-    local unused_plugins = {}
+    local unused = {}
     for _, plugin in ipairs(vim.pack.get()) do
-        active_plugins[plugin.spec.name] = plugin.active
-    end
-    for _, plugin in ipairs(vim.pack.get()) do
-        if not active_plugins[plugin.spec.name] then
-            table.insert(unused_plugins, plugin.spec.name)
+        if not plugin.active then
+            table.insert(unused, plugin.spec.name)
         end
     end
-    if #unused_plugins == 0 then
-        print("No unused plugins.")
+    if #unused == 0 then
+        vim.notify("No unused plugins.")
         return
     end
     local choice = vim.fn.confirm("Remove unused plugins?", "&Yes\n&No", 2)
     if choice == 1 then
-        vim.pack.del(unused_plugins)
+        vim.pack.del(unused)
     end
-end, { desc = "Clean Unused Packages" })
+end, { desc = "Clean unused packages" })
 
 vim.api.nvim_create_user_command("ConflictQF", function()
-    vim.cmd.cexpr("system('git diff --check')")
-    if not vim.tbl_isempty(vim.fn.getqflist()) then
-        vim.cmd.copen()
-    else
-        print("No conflict markers found.")
-    end
-end, { desc = "Load leftover merge conflict markers into quickfix" })
+    local output = vim.fn.systemlist("rg --vimgrep --hidden --glob '!.git/**' '^<<<<<<< '")
+    local cnt = #output
+    vim.fn.setqflist({}, " ", { title = string.format("Git Conflicts (%d)", cnt), lines = output, })
+    vim.cmd("copen")
+    vim.notify(string.format("%d conflict%s found", cnt, cnt == 1 and "" or "s"))
+end, { desc = "Load merge conflicts into quickfix", })
