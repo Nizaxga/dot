@@ -1,4 +1,3 @@
--- my sweet baby
 require("vim._core.ui2").enable({ enable = true })
 
 -- options
@@ -52,9 +51,6 @@ vim.cmd.packadd("matchit")
 vim.cmd.packadd("cfilter")
 vim.pack.add({
     -- utils
-    "https://github.com/nvim-telescope/telescope.nvim",
-    "https://github.com/nvim-telescope/telescope-ui-select.nvim",
-    "https://github.com/nvim-lua/plenary.nvim", -- still don't know what you doing
     "https://github.com/blazkowolf/gruber-darker.nvim",
     "https://github.com/stevearc/oil.nvim",
     "https://github.com/windwp/nvim-autopairs",
@@ -82,7 +78,6 @@ end, { bang = true })
 local neogit = require("neogit")
 neogit.setup {
     integrations = {
-        telescope = true,
         diffview = true,
     },
     diff_viewer = "diffview",
@@ -184,6 +179,16 @@ require('gruber-darker').setup({
     },
 })
 vim.cmd.colorscheme("gruber-darker")
+local transparent_groups = {
+    "Normal",
+    "NormalNC",
+    "NormalFloat",
+    "SignColumn",
+    "Pmenu",
+}
+for _, group in ipairs(transparent_groups) do
+    vim.api.nvim_set_hl(0, group, { bg = "none" })
+end
 vim.api.nvim_set_hl(0, "OilLink", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "OilDirHidden", { link = "GruberDarkerNiagaraBold" })
 vim.api.nvim_set_hl(0, "OilFileHidden", { link = "GruberDarkerFg0" })
@@ -214,38 +219,6 @@ require('oil').setup({
         ["<S-r>"] = "actions.refresh",
     }
 })
-local telescope_action = require("telescope.actions")
-local telescope_action_state = require("telescope.actions.state")
-local telescope_builtin = require("telescope.builtin")
-local ivy_theme = require("telescope.themes").get_ivy()
-local telescope = require("telescope")
-telescope.setup({
-    defaults = {
-        path_display = { "smart" },
-        mappings = {
-            i = {
-                ["<C-y>"] = function(prompt_bufnr)
-                    local selection = telescope_action_state.get_selected_entry()
-                    vim.fn.setreg("+", selection.path)
-                    print("Copied path: " .. selection.path)
-                    telescope_action.close(prompt_bufnr)
-                end,
-            },
-            n = {
-                ["<C-y>"] = function(prompt_bufnr)
-                    local selection = telescope_action_state.get_selected_entry()
-                    vim.fn.setreg("+", selection.path)
-                    print("Copied path: " .. selection.path)
-                    telescope_action.close(prompt_bufnr)
-                end,
-            },
-        },
-    },
-    extensions = {
-        ["ui-select"] = require("telescope.themes").get_ivy({}),
-    },
-})
-telescope.load_extension("ui-select")
 
 -- Keymap
 
@@ -291,29 +264,6 @@ end)
 map.set("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map.set("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
 map.set("x", "sa", "<Plug>(nvim-surround-visual)")
-map.set("n", "<leader><leader>", function()
-    telescope_builtin.find_files(vim.tbl_extend("force", ivy_theme, {
-        previewer = false,
-        hidden = true,
-        no_ignore = true,
-        file_ignore_patterns = { "^%.git/" }
-    }))
-end)
-map.set("n", "<leader>/", function()
-    telescope_builtin.live_grep(vim.tbl_extend("force", ivy_theme, {
-        hidden = true,
-        no_ignore = true,
-        additional_args = { "--glob=!.git/" }
-    }))
-end)
-map.set("n", "<leader>fw", function() telescope_builtin.grep_string(ivy_theme) end)
-map.set("n", "<leader>,", function() telescope_builtin.buffers(ivy_theme) end)
-map.set("n", "<leader>fr", function() telescope_builtin.oldfiles(ivy_theme) end)
-map.set("n", "<leader>fh", function() telescope_builtin.help_tags(ivy_theme) end)
-map.set("n", "<leader><S-m>", function() telescope_builtin.diagnostics(ivy_theme) end)
-map.set("n", "gA", function() telescope_builtin.lsp_references(ivy_theme) end)
-map.set("n", "gI", function() telescope_builtin.lsp_implementations(ivy_theme) end)
-map.set("n", "gD", function() telescope_builtin.lsp_definitions(ivy_theme) end)
 
 -- Auto Command
 
@@ -368,6 +318,14 @@ map.set("n", "<leader>=", function()
     vim.notify("Format on save: " .. (vim.b.format_on_save and "enabled" or "disabled"))
 end)
 
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+    pattern = "grep",
+    callback = function()
+        vim.cmd("copen")
+    end,
+})
+
+
 -- User Command
 
 vim.api.nvim_create_user_command("PackUpdate", function()
@@ -398,3 +356,37 @@ vim.api.nvim_create_user_command("ConflictQF", function()
     vim.cmd("copen")
     vim.notify(string.format("%d conflict%s found", cnt, cnt == 1 and "" or "s"))
 end, { desc = "Load merge conflicts into quickfix", })
+
+vim.api.nvim_create_user_command("Fd", function(opts)
+    local result = vim.system({
+        "fd",
+        "--type", "f",
+        "--hidden",
+        "--exclude", ".git",
+        opts.args,
+    }, { text = true }):wait()
+
+    if result.code ~= 0 then
+        vim.notify(result.stderr, vim.log.levels.ERROR)
+        return
+    end
+
+    local items = {}
+
+    for path in vim.gsplit(result.stdout, "\n", { trimempty = true }) do
+        table.insert(items, {
+            filename = path,
+            lnum = 1,
+            col = 1,
+        })
+    end
+
+    vim.fn.setqflist({}, " ", {
+        title = "Find: " .. opts.args,
+        items = items,
+    })
+
+    vim.cmd("copen")
+end, {
+    nargs = "+",
+})
