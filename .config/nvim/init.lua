@@ -50,7 +50,6 @@ vim.cmd.packadd("matchit")
 vim.cmd.packadd("cfilter")
 vim.pack.add({
     -- utils
-    "https://github.com/blazkowolf/gruber-darker.nvim",
     "https://github.com/stevearc/oil.nvim",
     "https://github.com/windwp/nvim-autopairs",
     "https://github.com/kylechui/nvim-surround",
@@ -170,29 +169,7 @@ require('gitsigns').setup {
     end,
 }
 local map = vim.keymap
-require('gruber-darker').setup({
-    bold = true,
-    undercurl = true,
-    underline = true,
-    italic = {
-        strings = false,
-        comments = false,
-        folds = false,
-    },
-})
-vim.cmd.colorscheme("gruber-darker")
-
-vim.api.nvim_set_hl(0, "OilLink", { link = "GruberDarkerYellowBold" })
-vim.api.nvim_set_hl(0, "OilDirHidden", { link = "GruberDarkerNiagaraBold" })
-vim.api.nvim_set_hl(0, "OilFileHidden", { link = "GruberDarkerFg0" })
-vim.api.nvim_set_hl(0, "GruberDarkerFg1", { link = "GruberDarkerFg0" })
-vim.api.nvim_set_hl(0, "GruberDarkerFg2", { link = "GruberDarkerFg0" })
-vim.api.nvim_set_hl(0, "Statement", { link = "GruberDarkerYellowBold" })
-vim.api.nvim_set_hl(0, "GruberDarkerYellow", { link = "GruberDarkerYellowBold" })
--- treesitter
-vim.api.nvim_set_hl(0, "@type.builtin", { link = "GruberDarkerQuartz" })
-vim.api.nvim_set_hl(0, "@property.cpp", { link = "GruberDarkerQuartz" })
-vim.api.nvim_set_hl(0, "@punctuation.bracket", { link = "GruberDarkerFg2" })
+vim.cmd.colorscheme("retrobox")
 
 require('oil').setup({
     default_file_explorer = true,
