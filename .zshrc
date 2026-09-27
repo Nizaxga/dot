@@ -2,6 +2,7 @@
 export MANPAGER="nvim +Man!"
 export EDITOR='nvim'
 export VISUAL='nvim'
+
 # ALIAS
 alias vim=nvim
 alias ll="ls -lah --color=auto"
@@ -10,6 +11,8 @@ alias l="tree -aph -L 2"
 alias lg=lazygit
 alias cat="bat -p"
 alias :q="exit"
+
+eval "$(fzf --zsh)"
 
 # Python venv
 ve() {
@@ -25,6 +28,3 @@ alias de="deactivate"
 alias fsort="~/.dotfiles/Scripts/fsort.sh"
 alias clip="~/.dotfiles/Scripts/copy-file.sh"
 alias prime="~/.dotfiles/Scripts/primes.out"
-
-# fzf
-eval "$(fzf --zsh)"

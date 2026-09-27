@@ -1,12 +1,14 @@
 {
-    "format_on_save": "on",
-    "toolbar": {
-        "breadcrumbs": false
+    "sticky_scroll": {
+        "enabled": true
     },
-    "preview_tabs": {
-        "enabled": false,
-    },
-    "soft_wrap": "none",
+    "vim_mode": true,
+    "use_smartcase_search": true,
+    "search": { "case_sensitive": true },
+    "project_panel": { "hide_root": true },
+    "preview_tabs": { "enabled": false },
+    "disable_ai": true,
+    "format_on_save": "off",
     "tab_size": 4,
     "git": { "inline_blame": { "location": "status_bar" } },
     "cursor_blink": false,
@@ -23,8 +25,6 @@
     "terminal": {
         "font_family": "IosevkaNLNice Nerd Font",
     },
-    "vim_mode": true,
-    "disable_ai": true,
     "icon_theme": "Colored Zed Icons Theme Dark",
     "diagnostics": { "inline": { "enabled": true } },
     "ui_font_size": 16,
@@ -58,36 +58,29 @@
                 "string": { "font_style": "normal" },
                 "operator": {
                     "color": "#d5d5d5",
-                    "font_style": "normal",
                     "font_weight": 400,
                 },
                 "punctuation": {
                     "color": "#d5d5d5",
-                    "font_style": "normal",
                     "font_weight": 400,
                 },
                 "tag": {
                     "color": "#d5d5d5",
-                    "font_style": "normal",
                     "font_weight": 400,
                 },
                 "variable": {
                     "color": "#d5d5d5",
-                    "font_style": "normal",
                     "font_weight": 400,
                 },
                 "number": {
                     "color": "#9e95c7",
-                    "font_style": "normal",
                     "font_weight": 400,
                 },
                 "type": {
                     "color": "#95a99f",
-                    "font_style": "normal",
                     "font_weight": 400,
                 },
             },
         },
     },
 }
-

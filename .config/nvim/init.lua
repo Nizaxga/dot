@@ -41,7 +41,6 @@ vim.diagnostic.config({
     update_in_insert = false,
     virtual_text = true,
     severity_sort = true,
-    float = { border = "none" },
 })
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nohlsearch")
@@ -92,7 +91,10 @@ require('blink.cmp').setup({
         ['<CR>'] = { 'select_and_accept', 'fallback' },
     },
     completion = {
-        menu = { scrollbar = false },
+        menu = {
+            border = "none",
+            scrollbar = false
+        },
         documentation = { auto_show = false },
     },
     sources = { default = { 'buffer', 'snippets', 'lsp', 'path' } },
@@ -158,7 +160,7 @@ require('gitsigns').setup {
         local map = function(keys, fn, desc)
             vim.keymap.set("n", keys, fn, { buffer = buf, desc = desc })
         end
-        map("<leader>gB", gs.blame, "Blame Buffer")
+        map("<leader>g<S-b>", gs.blame, "Blame Buffer")
         map("<leader>gd", gs.diffthis, "Diff This")
         map("]c", gs.next_hunk, "Next Hunk")
         map("[c", gs.prev_hunk, "Prev Hunk")
@@ -179,16 +181,7 @@ require('gruber-darker').setup({
     },
 })
 vim.cmd.colorscheme("gruber-darker")
-local transparent_groups = {
-    "Normal",
-    "NormalNC",
-    "NormalFloat",
-    "SignColumn",
-    "Pmenu",
-}
-for _, group in ipairs(transparent_groups) do
-    vim.api.nvim_set_hl(0, group, { bg = "none" })
-end
+
 vim.api.nvim_set_hl(0, "OilLink", { link = "GruberDarkerYellowBold" })
 vim.api.nvim_set_hl(0, "OilDirHidden", { link = "GruberDarkerNiagaraBold" })
 vim.api.nvim_set_hl(0, "OilFileHidden", { link = "GruberDarkerFg0" })
@@ -242,15 +235,15 @@ map.set("n", "<leader>bo", function()
         end
     end
 end)
-map.set("n", "<s-h>", "<cmd>bp<cr>")
-map.set("n", "<s-l>", "<cmd>bn<cr>")
+map.set("n", "<S-h>", "<cmd>bp<cr>")
+map.set("n", "<S-l>", "<cmd>bn<cr>")
 map.set("n", "+", "<cmd>vertical resize +5<cr>")
 map.set("n", "-", "<cmd>vertical resize -5<cr>")
 map.set("n", "<leader>|", "<cmd>vsplit<cr>")
 map.set("n", "<leader>-", "<cmd>split<cr>")
 map.set("n", "<leader>e", "<cmd>Oil<cr>")
 map.set("n", "n", "nzzzv")
-map.set("n", "N", "Nzzzv")
+map.set("n", "<S-n>", "Nzzzv")
 map.set("n", "*", "*zzzv")
 map.set("n", "#", "#zzzv")
 map.set("n", "<leader>yp", function()
