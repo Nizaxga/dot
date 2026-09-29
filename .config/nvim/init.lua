@@ -38,8 +38,8 @@ vim.o.makeprg = "make"
 vim.o.grepprg = "rg --vimgrep --smart-case --hidden"
 vim.diagnostic.config({
     underline = true,
-    update_in_insert = false,
-    virtual_text = true,
+    virtual_text = { spacing = 2, prefix = "●" },
+    float = { border = "double" },
     severity_sort = true,
 })
 vim.cmd.packadd("nvim.undotree")
@@ -56,12 +56,10 @@ vim.pack.add({
     "https://github.com/m00qek/baleia.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
     -- git stuff
-    "https://github.com/sindrets/diffview.nvim",
     "https://github.com/lewis6991/gitsigns.nvim",
     -- lsp stuff
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/mason-org/mason-lspconfig.nvim",
-    "https://github.com/neogitorg/neogit",
     -- cmp stuff
     'https://github.com/saghen/blink.lib',
     { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range("*") },
@@ -73,16 +71,7 @@ vim.g.baleia = require("baleia").setup({})
 vim.api.nvim_create_user_command("Colorize", function()
     vim.g.baleia.once(vim.api.nvim_get_current_buf())
 end, { bang = true })
-local neogit = require("neogit")
-neogit.setup {
-    integrations = {
-        diffview = true,
-    },
-    diff_viewer = "diffview",
-}
-require("diffview").setup({
-    use_icons = false
-})
+
 require('blink.cmp').setup({
     keymap = {
         preset = 'default',
@@ -97,7 +86,7 @@ require('blink.cmp').setup({
         documentation = { auto_show = false },
     },
     sources = { default = { 'buffer', 'snippets', 'lsp', 'path' } },
-    -- appearance = { nerd_font_variant = 'none', }
+    appearance = { nerd_font_variant = 'mono' }
 })
 require("nvim-autopairs").setup({})
 require('mason').setup()
@@ -169,6 +158,23 @@ require('gitsigns').setup {
     end,
 }
 local map = vim.keymap
+
+local function diagnostic_highlights()
+    local colors = {
+        Error = "#fb4934",
+        Warn  = "#fabd2f",
+        Info  = "#83a598",
+        Hint  = "#8ec07c",
+        Ok    = "#b8bb26",
+    }
+    for level, color in pairs(colors) do
+        vim.api.nvim_set_hl(0, "DiagnosticUnderline" .. level, { undercurl = true, sp = color })
+        vim.api.nvim_set_hl(0, "DiagnosticVirtualText" .. level, { fg = color })
+    end
+end
+vim.api.nvim_create_autocmd("ColorScheme", { callback = diagnostic_highlights })
+diagnostic_highlights()
+
 vim.cmd.colorscheme("retrobox")
 
 require('oil').setup({
@@ -192,8 +198,6 @@ require('oil').setup({
 
 -- Keymap
 
-map.set({ "n", "x" }, "j", "gj")
-map.set({ "n", "x" }, "k", "gk")
 map.set({ "n", "x" }, "x", '"_x')
 map.set({ "n", "x" }, "c", '"_c')
 map.set('n', '<leader>ca', vim.lsp.buf.code_action)
@@ -219,16 +223,20 @@ map.set("n", "-", "<cmd>vertical resize -5<cr>")
 map.set("n", "<leader>|", "<cmd>vsplit<cr>")
 map.set("n", "<leader>-", "<cmd>split<cr>")
 map.set("n", "<leader>e", "<cmd>Oil<cr>")
+map.set("n", "<leader>q", "<cmd>copen<cr>")
+map.set("n", "<leader>m", function() vim.diagnostic.setqflist() end)
+map.set("n", "<leader>f", ":Fd ")
+map.set("n", "<leader>/", ":grep ")
 map.set("n", "n", "nzzzv")
 map.set("n", "<S-n>", "Nzzzv")
 map.set("n", "*", "*zzzv")
 map.set("n", "#", "#zzzv")
-map.set("n", "<leader>yp", function()
+map.set("n", "yp", function()
     local path = vim.fn.expand("%:p")
     vim.fn.setreg("+", path)
     vim.notify("Yanked absolute path: " .. path)
 end, { desc = "Yank absolute buffer path" })
-map.set("n", "<leader>fc", function()
+map.set("n", "<leader>c", function()
     vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua")
 end)
 map.set("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
@@ -238,14 +246,11 @@ map.set("x", "sa", "<Plug>(nvim-surround-visual)")
 -- Auto Command
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank()
-    end,
+    callback = function() vim.hl.on_yank() end,
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = '*',
-    callback = function() pcall(vim.treesitter.start) end,
+    pattern = '*', callback = function() pcall(vim.treesitter.start) end,
 })
 
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -325,7 +330,7 @@ vim.api.nvim_create_user_command("ConflictQF", function()
     vim.fn.setqflist({}, " ", { title = string.format("Git Conflicts (%d)", cnt), lines = output, })
     vim.cmd("copen")
     vim.notify(string.format("%d conflict%s found", cnt, cnt == 1 and "" or "s"))
-end, { desc = "Load merge conflicts into quickfix", })
+end, { desc = "Grep All merge conflict into QFList", })
 
 vim.api.nvim_create_user_command("Fd", function(opts)
     local result = vim.system({
@@ -335,28 +340,14 @@ vim.api.nvim_create_user_command("Fd", function(opts)
         "--exclude", ".git",
         opts.args,
     }, { text = true }):wait()
-
     if result.code ~= 0 then
         vim.notify(result.stderr, vim.log.levels.ERROR)
         return
     end
-
     local items = {}
-
     for path in vim.gsplit(result.stdout, "\n", { trimempty = true }) do
-        table.insert(items, {
-            filename = path,
-            lnum = 1,
-            col = 1,
-        })
+        table.insert(items, { filename = path, lnum = 1, col = 1 })
     end
-
-    vim.fn.setqflist({}, " ", {
-        title = "Find: " .. opts.args,
-        items = items,
-    })
-
+    vim.fn.setqflist({}, " ", { title = "Find: " .. opts.args, items = items })
     vim.cmd("copen")
-end, {
-    nargs = "+",
-})
+end, { nargs = "+", })
