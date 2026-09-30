@@ -56,6 +56,7 @@ vim.pack.add({
     "https://github.com/kylechui/nvim-surround",
     "https://github.com/nvim-treesitter/nvim-treesitter",
     "https://github.com/lewis6991/gitsigns.nvim",
+    "https://github.com/stevearc/quicker.nvim",
     -- lsp stuff
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/mason-org/mason-lspconfig.nvim",
@@ -91,6 +92,21 @@ vim.cmd.colorscheme("retrobox")
 
 -- plugin setup
 
+require("quicker").setup({
+    type_icons = { E = "E ", W = "W ", I = "I ", N = "N ", H = "H ", },
+    keys = {
+        {
+            ">",
+            function() require("quicker").expand({ before = 2, after = 2, add_to_existing = true }) end,
+            desc = "Expand quickfix context",
+        },
+        {
+            "<",
+            function() require("quicker").collapse() end,
+            desc = "Collapse quickfix context",
+        },
+    },
+})
 require('blink.cmp').setup({
     keymap = {
         preset = 'default',
@@ -234,7 +250,8 @@ map("n", "-", "<cmd>vertical resize -5<cr>")
 map("n", "<leader>|", "<cmd>vsplit<cr>")
 map("n", "<leader>-", "<cmd>split<cr>")
 map("n", "<leader>e", "<cmd>Oil<cr>")
-map("n", "<leader>q", "<cmd>copen<cr>")
+map("n", "<leader>q", function() require("quicker").toggle() end)
+map("n", "<leader>l", function() require("quicker").toggle({ loclist = true }) end)
 map("n", "<leader>m", function() vim.diagnostic.setqflist() end)
 map("n", "<leader>f", ":Fd ")
 map("n", "<leader>/", ":grep ")
