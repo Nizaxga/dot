@@ -36,6 +36,7 @@ vim.o.undofile = true
 vim.o.tags = "./tags;,tags" -- `ctags -R .`
 vim.o.makeprg = "make"
 vim.o.grepprg = "rg --vimgrep --smart-case --hidden"
+vim.opt.grepformat = "%f:%l:%c:%m"
 vim.diagnostic.config({
     underline = true,
     virtual_text = { spacing = 2, prefix = "●" },
@@ -53,9 +54,7 @@ vim.pack.add({
     "https://github.com/stevearc/oil.nvim",
     "https://github.com/windwp/nvim-autopairs",
     "https://github.com/kylechui/nvim-surround",
-    "https://github.com/m00qek/baleia.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
-    -- git stuff
     "https://github.com/lewis6991/gitsigns.nvim",
     -- lsp stuff
     "https://github.com/mason-org/mason.nvim",
@@ -65,12 +64,32 @@ vim.pack.add({
     { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range("*") },
 })
 
--- plugin setup
+local map = vim.keymap.set
 
-vim.g.baleia = require("baleia").setup({})
-vim.api.nvim_create_user_command("Colorize", function()
-    vim.g.baleia.once(vim.api.nvim_get_current_buf())
-end, { bang = true })
+local function lsp_format(bufnr)
+    vim.lsp.buf.format({ bufnr = bufnr, async = false, })
+end
+
+local function diagnostic_highlights()
+    local colors = {
+        Error = "#fb4934",
+        Warn  = "#fabd2f",
+        Info  = "#83a598",
+        Hint  = "#8ec07c",
+        Ok    = "#b8bb26",
+    }
+    for level, color in pairs(colors) do
+        vim.api.nvim_set_hl(0, "DiagnosticUnderline" .. level, { undercurl = true, sp = color })
+        vim.api.nvim_set_hl(0, "DiagnosticVirtualText" .. level, { fg = color })
+    end
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", { callback = diagnostic_highlights })
+diagnostic_highlights()
+
+vim.cmd.colorscheme("retrobox")
+
+-- plugin setup
 
 require('blink.cmp').setup({
     keymap = {
@@ -145,37 +164,29 @@ require('gitsigns').setup {
     },
     on_attach                    = function(buf)
         local gs = require("gitsigns")
-        local map = function(keys, fn, desc)
-            vim.keymap.set("n", keys, fn, { buffer = buf, desc = desc })
+        local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = buf
+            vim.keymap.set(mode, l, r, opts)
         end
-        map("<leader>g<S-b>", gs.blame, "Blame Buffer")
-        map("<leader>gd", gs.diffthis, "Diff This")
-        map("]c", gs.next_hunk, "Next Hunk")
-        map("[c", gs.prev_hunk, "Prev Hunk")
-        map("dp", gs.reset_hunk, "Reset Hunk")
-        map("do", gs.preview_hunk, "Preview Hunk")
-        map("d<S-o>", gs.stage_hunk, "Stage Hunk")
+
+        map("n", "]c", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "]c", bang = true })
+            else
+                gs.nav_hunk('next')
+            end
+        end)
+        map("n", "[c", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "[c", bang = true })
+            else
+                gs.nav_hunk('prev')
+            end
+        end)
     end,
 }
-local map = vim.keymap
 
-local function diagnostic_highlights()
-    local colors = {
-        Error = "#fb4934",
-        Warn  = "#fabd2f",
-        Info  = "#83a598",
-        Hint  = "#8ec07c",
-        Ok    = "#b8bb26",
-    }
-    for level, color in pairs(colors) do
-        vim.api.nvim_set_hl(0, "DiagnosticUnderline" .. level, { undercurl = true, sp = color })
-        vim.api.nvim_set_hl(0, "DiagnosticVirtualText" .. level, { fg = color })
-    end
-end
-vim.api.nvim_create_autocmd("ColorScheme", { callback = diagnostic_highlights })
-diagnostic_highlights()
-
-vim.cmd.colorscheme("retrobox")
 
 require('oil').setup({
     default_file_explorer = true,
@@ -198,17 +209,17 @@ require('oil').setup({
 
 -- Keymap
 
-map.set({ "n", "x" }, "x", '"_x')
-map.set({ "n", "x" }, "c", '"_c')
-map.set('n', '<leader>ca', vim.lsp.buf.code_action)
-map.set("t", "<Esc>", "<C-\\><C-n>")
-map.set("x", "<", "<gv")
-map.set("x", ">", ">gv")
-map.set("n", "<C-j>", "<C-w>j")
-map.set("n", "<C-h>", "<C-w>h")
-map.set("n", "<C-l>", "<C-w>l")
-map.set("n", "<C-k>", "<C-w>k")
-map.set("n", "<leader>bo", function()
+map({ "n", "x" }, "x", '"_x')
+map({ "n", "x" }, "c", '"_c')
+map('n', '<leader>ca', vim.lsp.buf.code_action)
+map("t", "<Esc>", "<C-\\><C-n>")
+map("x", "<", "<gv")
+map("x", ">", ">gv")
+map("n", "<C-j>", "<C-w>j")
+map("n", "<C-h>", "<C-w>h")
+map("n", "<C-l>", "<C-w>l")
+map("n", "<C-k>", "<C-w>k")
+map("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if buf ~= current and vim.api.nvim_buf_is_loaded(buf) then
@@ -216,32 +227,33 @@ map.set("n", "<leader>bo", function()
         end
     end
 end)
-map.set("n", "<S-h>", "<cmd>bp<cr>")
-map.set("n", "<S-l>", "<cmd>bn<cr>")
-map.set("n", "+", "<cmd>vertical resize +5<cr>")
-map.set("n", "-", "<cmd>vertical resize -5<cr>")
-map.set("n", "<leader>|", "<cmd>vsplit<cr>")
-map.set("n", "<leader>-", "<cmd>split<cr>")
-map.set("n", "<leader>e", "<cmd>Oil<cr>")
-map.set("n", "<leader>q", "<cmd>copen<cr>")
-map.set("n", "<leader>m", function() vim.diagnostic.setqflist() end)
-map.set("n", "<leader>f", ":Fd ")
-map.set("n", "<leader>/", ":grep ")
-map.set("n", "n", "nzzzv")
-map.set("n", "<S-n>", "Nzzzv")
-map.set("n", "*", "*zzzv")
-map.set("n", "#", "#zzzv")
-map.set("n", "yp", function()
+map("n", "<S-h>", "<cmd>bp<cr>")
+map("n", "<S-l>", "<cmd>bn<cr>")
+map("n", "+", "<cmd>vertical resize +5<cr>")
+map("n", "-", "<cmd>vertical resize -5<cr>")
+map("n", "<leader>|", "<cmd>vsplit<cr>")
+map("n", "<leader>-", "<cmd>split<cr>")
+map("n", "<leader>e", "<cmd>Oil<cr>")
+map("n", "<leader>q", "<cmd>copen<cr>")
+map("n", "<leader>m", function() vim.diagnostic.setqflist() end)
+map("n", "<leader>f", ":Fd ")
+map("n", "<leader>/", ":grep ")
+map("n", "<leader>g", ":Git ")
+map("n", "n", "nzzzv")
+map("n", "<S-n>", "Nzzzv")
+map("n", "*", "*zzzv")
+map("n", "#", "#zzzv")
+map("n", "yp", function()
     local path = vim.fn.expand("%:p")
     vim.fn.setreg("+", path)
     vim.notify("Yanked absolute path: " .. path)
 end, { desc = "Yank absolute buffer path" })
-map.set("n", "<leader>c", function()
+map("n", "<leader>c", function()
     vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua")
 end)
-map.set("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
-map.set("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
-map.set("x", "sa", "<Plug>(nvim-surround-visual)")
+map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
+map("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
+map("x", "sa", "<Plug>(nvim-surround-visual)")
 
 -- Auto Command
 
@@ -269,9 +281,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         end
     end,
 })
-local function lsp_format(bufnr)
-    vim.lsp.buf.format({ bufnr = bufnr, async = false, })
-end
 
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
@@ -288,7 +297,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end,
 })
 
-map.set("n", "<leader>=", function()
+map("n", "<leader>=", function()
     vim.b.format_on_save = not (vim.b.format_on_save ~= false)
     vim.notify("Format on save: " .. (vim.b.format_on_save and "enabled" or "disabled"))
 end)
@@ -333,13 +342,8 @@ vim.api.nvim_create_user_command("ConflictQF", function()
 end, { desc = "Grep All merge conflict into QFList", })
 
 vim.api.nvim_create_user_command("Fd", function(opts)
-    local result = vim.system({
-        "fd",
-        "--type", "f",
-        "--hidden",
-        "--exclude", ".git",
-        opts.args,
-    }, { text = true }):wait()
+    local result = vim.system({ "fd", "--type", "f", "--hidden", "--exclude", ".git", opts.args, }, { text = true })
+        :wait()
     if result.code ~= 0 then
         vim.notify(result.stderr, vim.log.levels.ERROR)
         return
