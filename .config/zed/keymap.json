@@ -6,6 +6,12 @@
         },
     },
     {
+      "context": "ProjectPanel && not_editing",
+      "bindings": {
+        "shift-d": "project_panel::Trash"
+      }
+    },
+    {
         "context": "VimControl && !menu",
         "bindings": {
             "j": ["workspace::SendKeystrokes", "g j"],
