@@ -35,8 +35,8 @@ vim.o.autoread = true
 vim.o.undofile = true
 vim.o.tags = "./tags;,tags" -- `ctags -R .`
 vim.o.makeprg = "make"
-vim.o.grepprg = "rg --vimgrep --smart-case --hidden"
-vim.opt.grepformat = "%f:%l:%c:%m"
+-- vim.o.grepprg = "rg --vimgrep --smart-case --hidden"
+-- vim.opt.grepformat = "%f:%l:%c:%m"
 vim.diagnostic.config({
     underline = true,
     virtual_text = { spacing = 2, prefix = "●" },
@@ -56,6 +56,7 @@ vim.pack.add({
     "https://github.com/kylechui/nvim-surround",
     "https://github.com/nvim-treesitter/nvim-treesitter",
     "https://github.com/lewis6991/gitsigns.nvim",
+    "https://github.com/kdheepak/lazygit.nvim",
     "https://github.com/stevearc/quicker.nvim",
     -- lsp stuff
     "https://github.com/mason-org/mason.nvim",
@@ -227,8 +228,13 @@ require('oil').setup({
 
 map({ "n", "x" }, "x", '"_x')
 map({ "n", "x" }, "c", '"_c')
-map('n', '<leader>ca', vim.lsp.buf.code_action)
-map("t", "<Esc>", "<C-\\><C-n>")
+map("n", "<leader>ca", vim.lsp.buf.code_action)
+map("t", "<Esc>", function()
+    if vim.bo.filetype == "lazygit" then
+        return "<Esc>"
+    end
+    return "<C-\\><C-n>"
+end, { expr = true })
 map("x", "<", "<gv")
 map("x", ">", ">gv")
 map("n", "<C-j>", "<C-w>j")
@@ -248,14 +254,14 @@ map("n", "<S-l>", "<cmd>bn<cr>")
 map("n", "+", "<cmd>vertical resize +5<cr>")
 map("n", "-", "<cmd>vertical resize -5<cr>")
 map("n", "<leader>|", "<cmd>vsplit<cr>")
-map("n", "<leader>-", "<cmd>split<cr>")
-map("n", "<leader>e", "<cmd>Oil<cr>")
+map("n", "<leader>_", "<cmd>split<cr>")
+map("n", "-", "<cmd>Oil<cr>")
 map("n", "<leader>q", function() require("quicker").toggle() end)
 map("n", "<leader>l", function() require("quicker").toggle({ loclist = true }) end)
 map("n", "<leader>m", function() vim.diagnostic.setqflist() end)
 map("n", "<leader>f", ":Fd ")
-map("n", "<leader>/", ":grep ")
-map("n", "<leader>g", ":Git ")
+map("n", "<leader>/", ":Rg ")
+map("n", "<leader>lg", "<cmd>LazyGit<cr>")
 map("n", "n", "nzzzv")
 map("n", "<S-n>", "Nzzzv")
 map("n", "*", "*zzzv")
@@ -265,7 +271,7 @@ map("n", "yp", function()
     vim.fn.setreg("+", path)
     vim.notify("Yanked absolute path: " .. path)
 end, { desc = "Yank absolute buffer path" })
-map("n", "<leader>c", function()
+map("n", "<leader>cf", function()
     vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua")
 end)
 map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
@@ -319,14 +325,6 @@ map("n", "<leader>=", function()
     vim.notify("Format on save: " .. (vim.b.format_on_save and "enabled" or "disabled"))
 end)
 
-vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-    pattern = "grep",
-    callback = function()
-        vim.cmd("copen")
-    end,
-})
-
-
 -- User Command
 
 vim.api.nvim_create_user_command("PackUpdate", function()
@@ -351,12 +349,20 @@ vim.api.nvim_create_user_command("PackClean", function()
 end, { desc = "Clean unused packages" })
 
 vim.api.nvim_create_user_command("ConflictQF", function()
-    local output = vim.fn.systemlist("rg --vimgrep --hidden --glob '!.git/**' '^<<<<<<< '")
-    local cnt = #output
-    vim.fn.setqflist({}, " ", { title = string.format("Git Conflicts (%d)", cnt), lines = output, })
+    local result = vim.system({ "rg", "--vimgrep", "--hidden", "--glob", "!.git/**", "^<<<<<<< ", }, { text = true })
+        :wait()
+    if result.code ~= 0 and result.code ~= 1 then
+        vim.notify(result.stderr, vim.log.levels.ERROR)
+        return
+    end
+    local lines = vim.split(result.stdout, "\n", { trimempty = true })
+    local cnt = #lines
+    vim.fn.setqflist({}, " ", {
+        title = string.format("Git Conflicts (%d)", cnt),
+        lines = lines,
+    })
     vim.cmd("copen")
-    vim.notify(string.format("%d conflict%s found", cnt, cnt == 1 and "" or "s"))
-end, { desc = "Grep All merge conflict into QFList", })
+end, { desc = "Grep all merge conflicts into QFList", })
 
 vim.api.nvim_create_user_command("Fd", function(opts)
     local result = vim.system({ "fd", "--type", "f", "--hidden", "--exclude", ".git", opts.args, }, { text = true })
@@ -369,6 +375,21 @@ vim.api.nvim_create_user_command("Fd", function(opts)
     for path in vim.gsplit(result.stdout, "\n", { trimempty = true }) do
         table.insert(items, { filename = path, lnum = 1, col = 1 })
     end
-    vim.fn.setqflist({}, " ", { title = "Find: " .. opts.args, items = items })
+    vim.fn.setqflist({}, " ", { title = "Fd: " .. opts.args, items = items })
+    vim.cmd("copen")
+end, { nargs = "+", })
+
+vim.api.nvim_create_user_command("Rg", function(opts)
+    local result = vim.system({ "rg", "--vimgrep", "--smart-case", "--hidden", "--glob", "!.git/**", opts.args, },
+        { text = true }):wait()
+    if result.code ~= 0 and result.code ~= 1 then
+        vim.notify(result.stderr, vim.log.levels.ERROR)
+        return
+    end
+    local lines = vim.split(result.stdout, "\n", { trimempty = true })
+    vim.fn.setqflist({}, " ", {
+        title = "Rg: " .. opts.args,
+        lines = lines,
+    })
     vim.cmd("copen")
 end, { nargs = "+", })
