@@ -1,5 +1,5 @@
 # Ghostty Config
-theme = Gruvbox Dark Hard
+theme = Gruvbox Dark
 macos-titlebar-style = hidden
 confirm-close-surface = false
 shell-integration-features = no-cursor

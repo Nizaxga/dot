@@ -58,6 +58,7 @@ vim.pack.add({
     "https://github.com/lewis6991/gitsigns.nvim",
     "https://github.com/kdheepak/lazygit.nvim",
     "https://github.com/stevearc/quicker.nvim",
+    "https://github.com/ellisonleao/gruvbox.nvim",
     -- lsp stuff
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/mason-org/mason-lspconfig.nvim",
@@ -72,24 +73,17 @@ local function lsp_format(bufnr)
     vim.lsp.buf.format({ bufnr = bufnr, async = false, })
 end
 
-local function diagnostic_highlights()
-    local colors = {
-        Error = "#fb4934",
-        Warn  = "#fabd2f",
-        Info  = "#83a598",
-        Hint  = "#8ec07c",
-        Ok    = "#b8bb26",
+require("gruvbox").setup({
+    italic = {
+        strings = false
+    },
+    overrides = {
+        SignColumn = { bg = "none" },
+        CursorLineNr = { bg = "none" },
+        GruvboxYellowSign = { bg = "none" }
     }
-    for level, color in pairs(colors) do
-        vim.api.nvim_set_hl(0, "DiagnosticUnderline" .. level, { undercurl = true, sp = color })
-        vim.api.nvim_set_hl(0, "DiagnosticVirtualText" .. level, { fg = color })
-    end
-end
-
-vim.api.nvim_create_autocmd("ColorScheme", { callback = diagnostic_highlights })
-diagnostic_highlights()
-
-vim.cmd.colorscheme("retrobox")
+})
+vim.cmd.colorscheme("gruvbox")
 
 -- plugin setup
 
