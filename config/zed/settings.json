@@ -51,7 +51,7 @@
             "border.variant": "#3c3836",
             "border.focused": "#3c3836",
             "pane.focused_border": "#3c3836",
-            "panel.focused_border": "#3c3836",
+            "panel.focused_border": "#665c54",
             "text": "#ebdbb2",
             "text.muted": "#a89984",
             "element.hover": "#3c383680",
