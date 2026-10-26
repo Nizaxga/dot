@@ -175,20 +175,20 @@ require('gitsigns').setup {
     },
     on_attach                    = function(buf)
         local gs = require("gitsigns")
-        local function map(mode, l, r, opts)
+        local function mmap(mode, l, r, opts)
             opts = opts or {}
             opts.buffer = buf
             vim.keymap.set(mode, l, r, opts)
         end
 
-        map("n", "]c", function()
+        mmap("n", "]c", function()
             if vim.wo.diff then
                 vim.cmd.normal({ "]c", bang = true })
             else
                 gs.nav_hunk('next')
             end
         end)
-        map("n", "[c", function()
+        mmap("n", "[c", function()
             if vim.wo.diff then
                 vim.cmd.normal({ "[c", bang = true })
             else
@@ -270,7 +270,6 @@ map("n", "<leader>cf", function()
 end)
 map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
-map("x", "sa", "<Plug>(nvim-surround-visual)")
 
 -- Auto Command
 

@@ -1,16 +1,16 @@
-// // Place your key bindings in this file to override the defaults
 [
     { "key": "shift+k",     "command": "editor.action.showHover",                   "when": "editorTextFocus && vim.mode == 'Normal'" },
     { "key": "shift+l",     "command": "workbench.action.nextEditor",               "when": "editorTextFocus && vim.mode == 'Normal'" },
     { "key": "shift+h",     "command": "workbench.action.previousEditor",           "when": "editorTextFocus && vim.mode == 'Normal'" },
-    { "key": "ctrl+h",      "command": "workbench.action.focusLeftGroup" },
-    { "key": "ctrl+l",      "command": "workbench.action.focusRightGroup" },
-    
+    { "key": "ctrl+h",      "command": "workbench.action.focusLeftGroup",           "when": "editorTextFocus && vim.mode == 'Normal'" },
+    { "key": "ctrl+l",      "command": "workbench.action.focusRightGroup",          "when": "editorTextFocus && vim.mode == 'Normal'" },
+
     // netrw
-    { "key": "d",           "command": "newFolder",                                 "when": "filesExplorerFocus" },
-    { "key": "shift+r",     "command": "renameFile",                                "when": "filesExplorerFocus" },
-    { "key": "shift+5",     "command": "explorer.newFile",                          "when": "filesExplorerFocus" },
-    { "key": "shift+d",     "command": "deleteFile",                                "when": "filesExplorerFocus" },
+    { "key": "d",           "command": "explorer.newFolder",                        "when": "filesExplorerFocus && !inputFocus" },
+    { "key": "shift+r",     "command": "renameFile",                                "when": "filesExplorerFocus && !inputFocus" },
+    { "key": "shift+5",     "command": "explorer.newFile",                          "when": "filesExplorerFocus && !inputFocus" },
+    { "key": "shift+d",     "command": "moveFileToTrash",                           "when": "filesExplorerFocus && !inputFocus" },
+    { "key": "escape",      "command": "workbench.action.focusActiveEditorGroup",   "when": "filesExplorerFocus && !inputFocus" },
 
     // why are these broken in window???
     { "key": "ctrl+n",      "command": "workbench.action.quickOpenSelectNext",      "when": "inQuickOpen" },
@@ -25,6 +25,6 @@
 
     // disable stuff
     { "key": "ctrl+n",      "command": "-workbench.action.files.newUntitledFile" },
-    { "key": "enter",       "command": "-renameFile", 
+    { "key": "enter",       "command": "-renameFile",
                             "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus" }
 ]

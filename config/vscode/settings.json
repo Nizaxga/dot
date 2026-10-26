@@ -25,17 +25,14 @@
     "workbench.editor.enablePreview": false,
     "workbench.editor.editorActionsLocation": "hidden",
     "workbench.secondarySideBar.defaultVisibility": "hidden",
-    "workbench.sideBar.location": "right",
     "workbench.experimental.modernUI": true,
     "workbench.layoutControl.enabled": false,
-    "workbench.colorTheme": "Gruvbox Dark Hard",
+    "workbench.colorTheme": "Gruvbox Dark Medium",
     "workbench.iconTheme": "vscode-icons",
-
-    "window.commandCenter": false,
     "window.titleBarStyle": "custom",
 
-    "explorer.confirmDelete": true,
-    "explorer.confirmDragAndDrop": true,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
     "explorer.autoReveal": false,
 
     "vim.incsearch": true,
@@ -48,7 +45,6 @@
         "<C-k>": false,
         "<C-j>": false,
         "<C-b>": false,
-        "<C-r>": false,
     },
     "vim.normalModeKeyBindingsNonRecursive": [
         { "before": [ "]", "c" ],           "commands": [ "editor.action.dirtydiff.next" ] },
@@ -56,7 +52,6 @@
         { "before": [ "]", "d" ],           "commands": [ "editor.action.marker.next" ] },
         { "before": [ "[", "d" ],           "commands": [ "editor.action.marker.prev" ] },
         { "before": [ "+" ],                "commands": [ "workbench.action.increaseViewSize" ] },
-        { "before": [ "-" ],                "commands": [ "workbench.action.decreaseViewSize" ] },
         { "before": [ "x" ],                "after": [ "\"", "_", "x" ] },
         { "before": [ "Y" ],                "after": [ "y", "$" ] },
     ],
@@ -71,10 +66,19 @@
     "telemetry.telemetryLevel": "off",
     "breadcrumbs.enabled": false,
     "extensions.autoUpdate": "off",
+    "git.openRepositoryInParentFolders": "never",
 
     "diffEditor.ignoreTrimWhitespace": true,
     "notebook.output.scrolling": true,
     "notebook.output.minimalErrorRendering": true,
-    "notebook.displayOrder": [ "image/png", "text/html", "text/plain", "application/vnd.jupyter.widget-view+json" ],
-    "notebook.lineNumbers": "on",
+    "notebook.displayOrder": [
+        "image/png",
+        "text/html",
+        "text/plain",
+        "application/vnd.jupyter.widget-view+json"
+    ],
+    "claudeCode.preferredLocation": "panel",
+    "workbench.sideBar.location": "right",
+    "window.commandCenter": false,
+    "notebook.lineNumbers": "on"
 }

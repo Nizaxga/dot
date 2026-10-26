@@ -47,8 +47,7 @@
     {
         "context": "vim_mode == visual && !menu",
         "bindings": {
-            "s": null,
-            "s a": "vim::PushAddSurrounds",
+            "S": "vim::PushAddSurrounds",
             ">": ["workspace::SendKeystrokes", "> g v"],
             "<": ["workspace::SendKeystrokes", "< g v"],
         },
