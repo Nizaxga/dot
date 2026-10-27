@@ -35,6 +35,7 @@ vim.o.autoread = true
 vim.o.undofile = true
 vim.o.tags = "./tags;,tags" -- `ctags -R .`
 vim.o.makeprg = "make"
+vim.o.inccommand = "split"
 -- vim.o.grepprg = "rg --vimgrep --smart-case --hidden"
 -- vim.opt.grepformat = "%f:%l:%c:%m"
 vim.diagnostic.config({
@@ -195,6 +196,27 @@ require('gitsigns').setup {
                 gs.nav_hunk('prev')
             end
         end)
+        mmap("n", "do", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "do", bang = true })
+            else
+                gs.preview_hunk_inline()
+            end
+        end)
+        mmap("n", "dp", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "dp", bang = true })
+            else
+                gs.reset_hunk()
+            end
+        end)
+        mmap("x", "dp", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "dp", bang = true })
+            else
+                gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+            end
+        end)
     end,
 }
 
@@ -253,6 +275,7 @@ map("n", "-", "<cmd>Oil<cr>")
 map("n", "<leader>q", function() require("quicker").toggle() end)
 map("n", "<leader>l", function() require("quicker").toggle({ loclist = true }) end)
 map("n", "<leader>m", function() vim.diagnostic.setqflist() end)
+map("n", "<leader>e", vim.diagnostic.open_float)
 map("n", "<leader>f", ":Fd ")
 map("n", "<leader>/", ":Rg ")
 map("n", "<leader>lg", "<cmd>LazyGit<cr>")
@@ -270,6 +293,13 @@ map("n", "<leader>cf", function()
 end)
 map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
 map("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
+map("n", "<leader>dt", function()
+    if vim.wo.diff then
+        vim.cmd("diffoff!")
+    else
+        vim.cmd("windo diffthis")
+    end
+end)
 
 -- Auto Command
 
