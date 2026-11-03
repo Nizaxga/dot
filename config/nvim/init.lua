@@ -41,7 +41,7 @@ vim.o.inccommand = "split"
 vim.diagnostic.config({
     underline = true,
     virtual_text = { spacing = 2, prefix = "●" },
-    float = { border = "double" },
+    float = { border = "rounded" },
     severity_sort = true,
 })
 vim.cmd.packadd("nvim.undotree")
@@ -233,11 +233,6 @@ require('oil').setup({
     skip_confirm_for_simple_edits = true,
     prompt_save_on_select_new_entry = false,
     view_options = { show_hidden = true },
-    keymaps = {
-        ["<C-l>"] = false,
-        ["<C-h>"] = false,
-        ["<S-r>"] = "actions.refresh",
-    }
 })
 
 -- Keymap
@@ -253,10 +248,6 @@ map("t", "<Esc>", function()
 end, { expr = true })
 map("x", "<", "<gv")
 map("x", ">", ">gv")
-map("n", "<C-j>", "<C-w>j")
-map("n", "<C-h>", "<C-w>h")
-map("n", "<C-l>", "<C-w>l")
-map("n", "<C-k>", "<C-w>k")
 map("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -304,7 +295,8 @@ end)
 -- Auto Command
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function() vim.hl.on_yank() end,
+    -- callback = function() vim.hl.on_yank() end,
+    callback = function() vim.hl.hl_op() end, -- nvim v0.13.0
 })
 
 vim.api.nvim_create_autocmd('FileType', {

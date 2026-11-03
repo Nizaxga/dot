@@ -1,5 +1,7 @@
 {
+    "cli_default_open_behavior": "existing_window",
     "disable_ai": true,
+    "use_display_p3": true,
     "ui_font_family": "IosevkaNLNice Nerd Font",
     "buffer_font_family": "IosevkaNLNice Nerd Font",
     "ui_font_size": 16,
@@ -8,18 +10,16 @@
     "vim": { "toggle_relative_line_numbers": true },
     "theme": "Gruvbox Dark",
     "icon_theme": "Colored Zed Icons Theme Dark",
-    "current_line_highlight": "none",
+    "current_line_highlight": "all",
     "reduce_motion": "on",
     "redact_private_values": true,
     "suggest_extensions": false,
-    "focus_follows_mouse": { "enabled": true },
     "debugger": { "button": false },
     "terminal": { "button": false, },
-    "search": { "case_sensitive": true },
     "outline_panel": { "button": false },
-    "project_panel": { "hide_root": true },
     "collaboration_panel": { "button": false },
-
+    "search": { "case_sensitive": true },
+    "project_panel": { "hide_root": true },
     "status_bar": {
         "active_language_button": false,
         "pending_keystrokes_indicator": true,
@@ -28,7 +28,7 @@
         "show_active_file": false,
         "active_encoding_button": "enabled"
     },
-    "diff_view_style": "split",
+    "diff_view_style": "unified",
     "soft_wrap": "none",
     "use_smartcase_search": true,
     "preview_tabs": { "enabled": false },
