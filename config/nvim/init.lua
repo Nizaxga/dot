@@ -9,7 +9,7 @@ vim.o.mouse = "a"
 vim.o.clipboard = "unnamedplus"
 vim.o.winborder = "rounded"
 vim.o.cursorline = true
-vim.o.cursorlineopt = "number"
+vim.o.cursorlineopt = "both"
 vim.o.expandtab = true
 vim.o.modeline = false
 vim.o.tabstop = 4
@@ -32,12 +32,11 @@ vim.o.splitright = true
 vim.o.foldmethod = "manual"
 vim.o.pumheight = 8
 vim.o.autoread = true
+vim.o.cot = "fuzzy,menu"
 vim.o.undofile = true
 vim.o.tags = "./tags;,tags" -- `ctags -R .`
 vim.o.makeprg = "make"
 vim.o.inccommand = "split"
--- vim.o.grepprg = "rg --vimgrep --smart-case --hidden"
--- vim.opt.grepformat = "%f:%l:%c:%m"
 vim.diagnostic.config({
     underline = true,
     virtual_text = { spacing = 2, prefix = "●" },
@@ -63,9 +62,6 @@ vim.pack.add({
     -- lsp stuff
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/mason-org/mason-lspconfig.nvim",
-    -- cmp stuff
-    'https://github.com/saghen/blink.lib',
-    { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range("*") },
 })
 
 local map = vim.keymap.set
@@ -80,7 +76,6 @@ require("gruvbox").setup({
     },
     overrides = {
         SignColumn = { bg = "none" },
-        CursorLineNr = { bg = "none" },
         GruvboxYellowSign = { bg = "none" }
     }
 })
@@ -103,29 +98,9 @@ require("quicker").setup({
         },
     },
 })
-require('blink.cmp').setup({
-    keymap = {
-        preset = 'default',
-        ['<C-n>'] = { 'show', 'select_next', 'fallback' },
-        ['<CR>'] = { 'select_and_accept', 'fallback' },
-    },
-    completion = {
-        menu = {
-            border = "none",
-            scrollbar = false
-        },
-        documentation = { auto_show = false },
-    },
-    sources = { default = { 'buffer', 'snippets', 'lsp', 'path' } },
-    appearance = { nerd_font_variant = 'mono' }
-})
 require("nvim-autopairs").setup({})
 require('mason').setup()
-require("mason-lspconfig").setup {
-    ensure_installed = {
-        "lua_ls",
-    },
-}
+require("mason-lspconfig").setup { ensure_installed = {} }
 require('gitsigns').setup {
     signs                        = {
         add = { text = "▎" },
@@ -264,7 +239,6 @@ map("n", "<leader>|", "<cmd>vsplit<cr>")
 map("n", "<leader>_", "<cmd>split<cr>")
 map("n", "-", "<cmd>Oil<cr>")
 map("n", "<leader>q", function() require("quicker").toggle() end)
-map("n", "<leader>l", function() require("quicker").toggle({ loclist = true }) end)
 map("n", "<leader>m", function() vim.diagnostic.setqflist() end)
 map("n", "<leader>e", vim.diagnostic.open_float)
 map("n", "<leader>f", ":Fd ")
