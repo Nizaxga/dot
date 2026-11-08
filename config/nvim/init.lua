@@ -64,7 +64,6 @@ vim.pack.add({
     "https://github.com/mason-org/mason-lspconfig.nvim",
 })
 
-local map = vim.keymap.set
 
 local function lsp_format(bufnr)
     vim.lsp.buf.format({ bufnr = bufnr, async = false, })
@@ -75,13 +74,25 @@ require("gruvbox").setup({
         strings = false
     },
     overrides = {
-        SignColumn = { bg = "none" },
-        GruvboxYellowSign = { bg = "none" }
+        GruvboxRedSign = { bg = "none" },
+        GruvboxYellowSign = { bg = "none" },
+        GruvboxBlueSign = { bg = "none" },
+        GruvboxAquaSign = { bg = "none" },
     }
 })
 vim.cmd.colorscheme("gruvbox")
 
 -- plugin setup
+
+require('oil').setup({
+    default_file_explorer = true,
+    columns = { "icon", "permissions", "size", "mtime", },
+    win_options = { signcolumn = "yes", },
+    delete_to_trash = true,
+    skip_confirm_for_simple_edits = true,
+    prompt_save_on_select_new_entry = false,
+    view_options = { show_hidden = true },
+})
 
 require("quicker").setup({
     type_icons = { E = "E ", W = "W ", I = "I ", N = "N ", H = "H ", },
@@ -156,7 +167,6 @@ require('gitsigns').setup {
             opts.buffer = buf
             vim.keymap.set(mode, l, r, opts)
         end
-
         mmap("n", "]c", function()
             if vim.wo.diff then
                 vim.cmd.normal({ "]c", bang = true })
@@ -178,6 +188,7 @@ require('gitsigns').setup {
                 gs.preview_hunk_inline()
             end
         end)
+        mmap("n", "dO", function() gs.stage_hunk() end)
         mmap("n", "dp", function()
             if vim.wo.diff then
                 vim.cmd.normal({ "dp", bang = true })
@@ -195,23 +206,9 @@ require('gitsigns').setup {
     end,
 }
 
-
-require('oil').setup({
-    default_file_explorer = true,
-    columns = {
-        "icon",
-        "permissions",
-        "size",
-        "mtime",
-    },
-    delete_to_trash = true,
-    skip_confirm_for_simple_edits = true,
-    prompt_save_on_select_new_entry = false,
-    view_options = { show_hidden = true },
-})
-
 -- Keymap
 
+local map = vim.keymap.set
 map({ "n", "x" }, "x", '"_x')
 map({ "n", "x" }, "c", '"_c')
 map("n", "<leader>ca", vim.lsp.buf.code_action)
@@ -269,8 +266,7 @@ end)
 -- Auto Command
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-    -- callback = function() vim.hl.on_yank() end,
-    callback = function() vim.hl.hl_op() end, -- nvim v0.13.0
+    callback = function() vim.hl.hl_op() end,
 })
 
 vim.api.nvim_create_autocmd('FileType', {

@@ -48,4 +48,11 @@
             "<": ["workspace::SendKeystrokes", "< g v"],
         },
     },
+    {
+        "context": "Editor && showing_completions",
+        "bindings": {
+            "ctrl-y": "editor::ConfirmCompletion",
+        },
+    },
 ]
+

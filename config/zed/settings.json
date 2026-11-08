@@ -15,7 +15,7 @@
     "redact_private_values": true,
     "suggest_extensions": false,
     "debugger": { "button": false },
-    "terminal": { "button": false, },
+    "terminal": { "button": false },
     "outline_panel": { "button": false },
     "collaboration_panel": { "button": false },
     "search": { "case_sensitive": true },
@@ -124,3 +124,4 @@
         }
     }
 }
+
