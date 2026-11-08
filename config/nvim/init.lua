@@ -212,6 +212,11 @@ local map = vim.keymap.set
 map({ "n", "x" }, "x", '"_x')
 map({ "n", "x" }, "c", '"_c')
 map("n", "<leader>ca", vim.lsp.buf.code_action)
+map("n", "<Esc>", function()
+    local mc_ns = vim.api.nvim_create_namespace('nvim.multicursor')
+    vim.api.nvim_buf_clear_namespace(0, mc_ns, 0, -1)
+    vim.cmd.nohlsearch()
+end)
 map("t", "<Esc>", function()
     if vim.bo.filetype == "lazygit" then
         return "<Esc>"
