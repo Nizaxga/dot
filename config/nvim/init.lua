@@ -32,7 +32,7 @@ vim.o.splitright = true
 vim.o.foldmethod = "manual"
 vim.o.pumheight = 8
 vim.o.autoread = true
-vim.o.cot = "fuzzy,menu"
+vim.o.cot = "fuzzy,menu,noselect"
 vim.o.undofile = true
 vim.o.tags = "./tags;,tags" -- `ctags -R .`
 vim.o.makeprg = "make"
@@ -235,8 +235,7 @@ map("n", "<leader>bo", function()
 end)
 map("n", "<S-h>", "<cmd>bp<cr>")
 map("n", "<S-l>", "<cmd>bn<cr>")
-map("n", "+", "<cmd>vertical resize +5<cr>")
-map("n", "-", "<cmd>vertical resize -5<cr>")
+map("n", "+", "<cmd>vertical resize +5<cr><cmd>resize +5<cr>")
 map("n", "<leader>|", "<cmd>vsplit<cr>")
 map("n", "<leader>_", "<cmd>split<cr>")
 map("n", "-", "<cmd>Oil<cr>")
