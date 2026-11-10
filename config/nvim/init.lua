@@ -92,6 +92,16 @@ require('oil').setup({
     skip_confirm_for_simple_edits = true,
     prompt_save_on_select_new_entry = false,
     view_options = { show_hidden = true },
+    keymaps = {
+        ['yp'] = {
+            desc = 'Copy filepath to system clipboard',
+            callback = function()
+                require('oil.actions').copy_entry_path.callback()
+                vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
+                vim.notify("Yanked absolute path: " .. vim.fn.getreg(vim.v.register))
+            end,
+        },
+    },
 })
 
 require("quicker").setup({
@@ -109,7 +119,7 @@ require("quicker").setup({
         },
     },
 })
-require("nvim-autopairs").setup({})
+require("nvim-autopairs").setup()
 require('mason').setup()
 require("mason-lspconfig").setup { ensure_installed = {} }
 require('gitsigns').setup {
@@ -208,24 +218,23 @@ require('gitsigns').setup {
 
 -- Keymap
 
-local map = vim.keymap.set
-map({ "n", "x" }, "x", '"_x')
-map({ "n", "x" }, "c", '"_c')
-map("n", "<leader>ca", vim.lsp.buf.code_action)
-map("n", "<Esc>", function()
+vim.keymap.set({ "n", "x" }, "x", '"_x')
+vim.keymap.set({ "n", "x" }, "c", '"_c')
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)
+vim.keymap.set("n", "<Esc>", function()
     local mc_ns = vim.api.nvim_create_namespace('nvim.multicursor')
     vim.api.nvim_buf_clear_namespace(0, mc_ns, 0, -1)
     vim.cmd.nohlsearch()
 end)
-map("t", "<Esc>", function()
+vim.keymap.set("t", "<Esc>", function()
     if vim.bo.filetype == "lazygit" then
         return "<Esc>"
     end
     return "<C-\\><C-n>"
 end, { expr = true })
-map("x", "<", "<gv")
-map("x", ">", ">gv")
-map("n", "<leader>bo", function()
+vim.keymap.set("x", "<", "<gv")
+vim.keymap.set("x", ">", ">gv")
+vim.keymap.set("n", "<leader>bo", function()
     local current = vim.api.nvim_get_current_buf()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if buf ~= current and vim.api.nvim_buf_is_loaded(buf) then
@@ -233,33 +242,33 @@ map("n", "<leader>bo", function()
         end
     end
 end)
-map("n", "<S-h>", "<cmd>bp<cr>")
-map("n", "<S-l>", "<cmd>bn<cr>")
-map("n", "+", "<cmd>vertical resize +5<cr><cmd>resize +5<cr>")
-map("n", "<leader>|", "<cmd>vsplit<cr>")
-map("n", "<leader>_", "<cmd>split<cr>")
-map("n", "-", "<cmd>Oil<cr>")
-map("n", "<leader>q", function() require("quicker").toggle() end)
-map("n", "<leader>m", function() vim.diagnostic.setqflist() end)
-map("n", "<leader>e", vim.diagnostic.open_float)
-map("n", "<leader>f", ":Fd ")
-map("n", "<leader>/", ":Rg ")
-map("n", "<leader>lg", "<cmd>LazyGit<cr>")
-map("n", "n", "nzzzv")
-map("n", "<S-n>", "Nzzzv")
-map("n", "*", "*zzzv")
-map("n", "#", "#zzzv")
-map("n", "yp", function()
+vim.keymap.set("n", "<S-h>", "<cmd>bp<cr>")
+vim.keymap.set("n", "<S-l>", "<cmd>bn<cr>")
+vim.keymap.set("n", "+", "<cmd>vertical resize +5<cr><cmd>resize +5<cr>")
+vim.keymap.set("n", "<leader>|", "<cmd>vsplit<cr>")
+vim.keymap.set("n", "<leader>_", "<cmd>split<cr>")
+vim.keymap.set("n", "-", "<cmd>Oil<cr>")
+vim.keymap.set("n", "<leader>q", function() require("quicker").toggle() end)
+vim.keymap.set("n", "<leader>m", function() vim.diagnostic.setqflist() end)
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+vim.keymap.set("n", "<leader>f", ":Fd ")
+vim.keymap.set("n", "<leader>/", ":Rg ")
+vim.keymap.set("n", "<leader>lg", "<cmd>LazyGit<cr>")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "<S-n>", "Nzzzv")
+vim.keymap.set("n", "*", "*zzzv")
+vim.keymap.set("n", "#", "#zzzv")
+vim.keymap.set("n", "yp", function()
     local path = vim.fn.expand("%:p")
     vim.fn.setreg("+", path)
     vim.notify("Yanked absolute path: " .. path)
 end, { desc = "Yank absolute buffer path" })
-map("n", "<leader>cf", function()
+vim.keymap.set("n", "<leader>cf", function()
     vim.cmd.edit(vim.fn.stdpath("config") .. "/init.lua")
 end)
-map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
-map("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
-map("n", "<leader>dt", function()
+vim.keymap.set("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end)
+vim.keymap.set("n", "<leader>uh", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end)
+vim.keymap.set("n", "<leader>dt", function()
     if vim.wo.diff then
         vim.cmd("diffoff!")
     else
@@ -309,7 +318,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end,
 })
 
-map("n", "<leader>=", function()
+vim.keymap.set("n", "<leader>=", function()
     vim.b.format_on_save = not (vim.b.format_on_save ~= false)
     vim.notify("Format on save: " .. (vim.b.format_on_save and "enabled" or "disabled"))
 end)
