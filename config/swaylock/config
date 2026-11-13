@@ -1,0 +1,51 @@
+# Gruvbox Dark - Swaylock
+
+# Background
+image=/home/nicek/.config/swaylock/lock-bg.png
+scaling=fill
+color=282828
+
+# Inside (password input)
+inside-color=282828
+inside-clear-color=282828
+inside-caps-lock-color=282828
+inside-ver-color=282828
+inside-wrong-color=282828
+
+# Ring
+ring-color=504945
+ring-clear-color=d79921
+ring-caps-lock-color=d79921
+ring-ver-color=d79921
+ring-wrong-color=cc241d
+
+# Ring progress
+key-hl-color=d79921
+bs-hl-color=cc241d
+
+# Text
+text-color=ebdbb2
+text-clear-color=ebdbb2
+text-caps-lock-color=ebdbb2
+text-ver-color=ebdbb2
+text-wrong-color=ebdbb2
+
+# Indicators
+inside-ver-color=282828
+inside-wrong-color=282828
+
+# Layout
+indicator-radius=100
+indicator-thickness=7
+
+# Clock
+clock
+timestr=%H:%M
+datestr=%A, %d %B %Y
+
+# Display
+show-failed-attempts
+ignore-empty-password
+font=JetBrainsMono Nerd Font
+font-size=24
+
