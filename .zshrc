@@ -1,4 +1,4 @@
-# Install fzf + bat + lazygit
+# Needed fd,rg,fzf,bat,lazygit
 export MANPAGER="nvim +Man!"
 export EDITOR='nvim'
 export VISUAL='nvim'
@@ -25,6 +25,6 @@ ve() {
 alias de="deactivate"
 
 # SCRIPTS
-alias fsort="~/.dotfiles/Scripts/fsort.sh"
-alias clip="~/.dotfiles/Scripts/copy-file.sh"
-alias prime="~/.dotfiles/Scripts/primes.out"
+alias fsort="~/.dot/Scripts/fsort.sh"
+alias clip="~/.dot/Scripts/copy-file.sh"
+alias prime="~/.dot/Scripts/primes.out"

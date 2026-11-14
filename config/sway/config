@@ -6,11 +6,10 @@ set $down   j
 set $up     k
 set $right  l
 set $term   ghostty
-set $menu   wofi --show drun
+set $menu   ~/.dot/Scripts/wmenu-drun
 
 exec mako
 exec waybar
-
 exec dbus-update-activation-environment
 exec blueman-applet
 
@@ -100,8 +99,6 @@ input * {
 }
 
 output eDP-1 {
-    mode 1920x1200@60.001Hz
-    resolution 1920x1200
     bg ~/Pictures/Wallpapers/Cat_at_Play.png fill
     scale 1.25
 }
