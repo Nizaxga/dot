@@ -12,7 +12,7 @@ selected=$(
     while IFS= read -r file; do
         name=$(grep -m1 '^Name=' "$file" | cut -d= -f2-)
         [ -n "$name" ] && printf '%s\n' "$name"
-    done <<< "$apps" | sort -fu | wmenu -i
+    done <<< "$apps" | sort -fu | ~/.dot/Scripts/wmenu-wrap -i -p "Applications" -l 10
 )
 
 [ -z "$selected" ] && exit 0

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cliphist list | 
+    ~/.dot/Scripts/wmenu-wrap -p "Clipboard" -l 10 | 
+    cliphist decode |
+    wl-copy

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+exec wmenu \
+    -N "#282828" \
+    -n "#a89984" \
+    -S "#d79921" \
+    -s "#282828" \
+    -M "#282828" \
+    -m "#ebdbb2" \
+    -f "IosevkaNLNice Nerd Font 10" \
+    "$@"
