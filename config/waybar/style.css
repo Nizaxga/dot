@@ -1,3 +1,5 @@
+/* ── YoRHa OS // Waybar ─────────────────────── */
+
 * {
     font-family: "IosevkaNLNice Nerd Font";
     font-size: 13px;
@@ -8,102 +10,133 @@
 }
 
 window#waybar {
-    background: rgba(40, 40, 40, 0.90);
-    color: #ebdbb2;
+    background: #1a1814;
+    color: #c0bc9e;
+    border-top: 1px solid #706c58;
 }
+
+/* ── Module spacing ─────────────────────────── */
 
 .modules-left,
 .modules-right {
-    background: rgba(40, 40, 40, 0.82);
-    border: 1px solid rgba(168, 153, 132, 0.20);
-    border-radius: 5px;
-    padding: 0 8px;
+    background: transparent;
+    border: none;
+    padding: 0 6px;
 }
+
+#workspaces,
+#mode,
+#scratchpad,
+#window,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#bluetooth,
+#power-profiles-daemon,
+#cpu,
+#memory,
+#temperature,
+#language,
+#battery,
+#clock {
+    padding: 0 8px;
+    color: #c0bc9e;
+}
+
+/* ── Workspaces ─────────────────────────────── */
 
 #workspaces {
     padding: 0 3px;
 }
 
 #workspaces button {
-    color: #928374;
-    padding: 0 9px;
-    margin: 5px 2px;
+    color: #706c58;
     background: transparent;
-    border-radius: 3px;
+    padding: 0 10px;
+    margin: 4px 2px;
+    border: 1px solid transparent;
     transition: none;
 }
 
 #workspaces button.focused {
-    color: #282828;
-    background: #d79921;
+    color: #d0cca8;
+    background: #3e3c33;
+    border: 1px solid #706c58;
 }
 
 #workspaces button:hover {
-    color: #ebdbb2;
-    background: rgba(168, 153, 132, 0.15);
+    color: #d0cca8;
+    background: #3a3830;
+    border: 1px solid #706c58;
 }
 
 #workspaces button.urgent {
-    color: #fb4934;
+    color: #ff4444;
 }
 
+/* ── System information ─────────────────────── */
+
 #clock {
-    color: #ebdbb2;
+    color: #d0cca8;
     font-weight: 600;
     padding: 0 12px;
 }
 
 #cpu,
 #memory,
-#idle_inhibitor {
-    padding: 0 8px;
-    margin: 0 2px;
-    min-width: 20px;
+#temperature {
+    color: #c0bc9e;
 }
+
 #network,
 #bluetooth,
-#pulseaudio,
-#battery,
-#tray {
-    color: #d5c4a1;
-    padding: 0 8px;
-}
-
-#network {
-    color: #83a598;
-}
-
-#bluetooth {
-    color: #83a598;
-}
-
 #pulseaudio {
-    color: #d79921;
+    color: #d0cca8;
 }
 
 #battery {
-    color: #b8bb26;
+    color: #d0cca8;
 }
 
 #battery.warning {
-    color: #fabd2f;
+    color: #d0cca8;
 }
 
 #battery.critical {
-    color: #fb4934;
+    color: #ff4444;
 }
 
-#tray {
-    padding-left: 8px;
+#idle_inhibitor {
+    color: #d0cca8;
 }
+
+#power-profiles-daemon {
+    color: #d0cca8;
+}
+
+/* ── Hover effects ──────────────────────────── */
+
+#network:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#clock:hover,
+#idle_inhibitor:hover {
+    background: #2c2a24;
+}
+
+/* ── Tooltips ───────────────────────────────── */
 
 tooltip {
-    background: rgba(40, 40, 40, 0.96);
-    border: 1px solid #504945;
-    border-radius: 4px;
+    background: #1a1814;
+    border: 1px solid #706c58;
+    border-radius: 0;
 }
 
 tooltip label {
-    color: #ebdbb2;
+    color: #d0cca8;
     padding: 4px;
 }
+

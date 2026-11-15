@@ -9,28 +9,32 @@ set $term     ghostty
 set $menu     ~/.dot/Scripts/wmenu-drun
 set $clipMenu ~/.dot/Scripts/wmenu-clip
 
-exec mako
-exec waybar
+# exec mako
+# exec waybar
+exec ryoku-shell daemon
 exec dbus-update-activation-environment
 exec blueman-applet
 exec wl-paste --type text --watch cliphist store
 exec wl-paste --type image --watch cliphist store
 
-default_border pixel 2
-default_floating_border pixel 2
-hide_edge_borders none
+default_border pixel 1
+default_floating_border pixel 1
 
-client.focused          #d79921 #282828 #ebdbb2 #d79921 #d79921
-client.focused_inactive #504945 #282828 #a89984 #504945 #504945
-client.unfocused        #3c3836 #282828 #a89984 #3c3836 #3c3836
-client.urgent           #cc241d #282828 #ebdbb2 #cc241d #cc241d
-client.placeholder      #282828 #282828 #ebdbb2 #282828 #282828
+client.focused          #d0cca8 #1a1814 #d0cca8 #706c58 #d0cca8
+client.focused_inactive #706c58 #1a1814 #c0bc9e #524e3e #524e3e
+client.unfocused        #524e3e #1a1814 #c0bc9e #524e3e #524e3e
+client.urgent           #ff4444 #1a1814 #d0cca8 #ff4444 #ff4444
+client.placeholder      #2c2a24 #1a1814 #c0bc9e #2c2a24 #2c2a24
 
 gaps inner 2
 gaps outer 2
 
 focus_follows_mouse no
 mouse_warping container
+
+corner_radius 8
+shadows enable
+blur enable
 
 bindsym $mod+$left          focus left
 bindsym $mod+$right         focus right
@@ -101,9 +105,18 @@ input type:touchpad {
 input * {
     xkb_layout us,th
     xkb_options grp:caps_toggle
+    scroll_factor 0.5
 }
 
 output eDP-1 {
-    bg ~/Pictures/Wallpapers/Cat_at_Play.png fill
+    bg ~/Pictures/Wallpapers/wallhaven-oglzx7.jpg fill
     scale 1.25
 }
+
+exec swayidle -w \
+    timeout 300 'swaylock' \
+    timeout 420 'loginctl suspend' \
+    after-resume 'swaymsg "output * dpms on"' \
+    before-sleep 'swaylock' \
+    lock 'swaylock'
+
