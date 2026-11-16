@@ -93,13 +93,11 @@ require('oil').setup({
     prompt_save_on_select_new_entry = false,
     view_options = { show_hidden = true },
     keymaps = {
-        ['yp'] = {
-            desc = 'Copy filepath to system clipboard',
-            callback = function()
-                require('oil.actions').copy_entry_path.callback()
-                vim.fn.setreg("+", vim.fn.getreg(vim.v.register))
-                vim.notify("Yanked absolute path: " .. vim.fn.getreg(vim.v.register))
-            end,
+        ['<leader>yp'] = { "actions.yank_entry" },
+        ["!"] = {
+            "actions.open_cmdline",
+            opts = { shorten_path = false },
+            desc = "Run command with selected file",
         },
     },
 })

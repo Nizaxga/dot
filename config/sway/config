@@ -6,12 +6,13 @@ set $down     j
 set $up       k
 set $right    l
 set $term     ghostty
-set $menu     ~/.dot/Scripts/wmenu-drun
+
+set $appMenu     ~/.dot/Scripts/wmenu-drun
 set $clipMenu ~/.dot/Scripts/wmenu-clip
 
-# exec mako
-# exec waybar
-exec ryoku-shell daemon
+exec mako
+exec waybar
+# exec ryoku-shell daemon
 exec dbus-update-activation-environment
 exec blueman-applet
 exec wl-paste --type text --watch cliphist store
@@ -47,7 +48,7 @@ bindsym $mod+Shift+$down    move down
 bindsym $mod+Shift+$up      move up
 
 bindsym $mod+Return         exec $term
-bindsym $mod+d              exec $menu
+bindsym $mod+d              exec $appMenu
 bindsym $mod+Shift+x        exec swaylock
 bindsym $mod+v              exec $clipMenu
 
@@ -106,10 +107,11 @@ input * {
     xkb_layout us,th
     xkb_options grp:caps_toggle
     scroll_factor 0.5
+    repeat_delay 150
 }
 
 output eDP-1 {
-    bg ~/Pictures/Wallpapers/wallhaven-oglzx7.jpg fill
+    # bg ~/Pictures/Wallpapers/yoru-darker-gray-bg.jpg fill
     scale 1.25
 }
 
