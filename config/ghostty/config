@@ -15,7 +15,3 @@ alpha-blending = linear
 window-padding-x = 12
 window-padding-y = 12
 minimum-contrast = 1.1
-# background-opacity = 0.90
-# background-blur = true
-selection-background = #264f78
-selection-foreground = #cccccc

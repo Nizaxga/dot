@@ -8,7 +8,7 @@
     "editor.lineNumbers": "relative",
     "editor.inlayHints.enabled": "off",
     "editor.unicodeHighlight.ambiguousCharacters": true,
-    "editor.fontFamily": "IosevkaNL-Nice",
+    "editor.fontFamily": "IosevkaNLNice Nerd Font",
     "editor.renderLineHighlight": "none",
     "editor.scrollbar.horizontal": "hidden",
     "editor.scrollbar.vertical": "hidden",
@@ -27,9 +27,10 @@
     "workbench.secondarySideBar.defaultVisibility": "hidden",
     "workbench.experimental.modernUI": true,
     "workbench.layoutControl.enabled": false,
+    "workbench.navigationControl.enabled": false,
     "workbench.colorTheme": "Gruvbox Dark Medium",
-    "workbench.iconTheme": "vscode-icons",
-    "window.titleBarStyle": "custom",
+    "workbench.activityBar.location": "top",
+    "workbench.sideBar.location": "right",
 
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
@@ -77,8 +78,6 @@
         "text/plain",
         "application/vnd.jupyter.widget-view+json"
     ],
-    "claudeCode.preferredLocation": "panel",
-    "workbench.sideBar.location": "right",
+    "notebook.lineNumbers": "on",
     "window.commandCenter": false,
-    "notebook.lineNumbers": "on"
 }
