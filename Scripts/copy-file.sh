@@ -11,7 +11,6 @@ else
     exit 1
 fi
 
-# If input is a file
 if [ -n "$1" ]; then
     if [ ! -f "$1" ]; then
         echo "File not found: $1"
@@ -19,6 +18,5 @@ if [ -n "$1" ]; then
     fi
     cat "$1" | eval "$CLIP_CMD"
 else
-    # Read from stdin
     cat | eval "$CLIP_CMD"
 fi

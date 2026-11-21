@@ -1,4 +1,5 @@
 {
+    "position": "bottom",
     "modules-left": [
         "sway/workspaces",
         "sway/mode",
@@ -74,7 +75,7 @@
         "format-alt": "{:%Y-%m-%d}"
     },
     "cpu": {
-        "format": "{usage}% ",
+        "format": "  {usage}%",
         "tooltip": false
     },
     "memory": {

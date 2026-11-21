@@ -1,4 +1,4 @@
-font pango:IosevkaNLNice Nerd Font 10
+font pango:IosevkaNLNice Nerd Font Medium 10
 
 set $mod      Mod4
 set $left     h
@@ -7,34 +7,26 @@ set $up       k
 set $right    l
 set $term     ghostty
 
-set $appMenu     ~/.dot/Scripts/wmenu-drun
+set $appMenu  rofi -show drun -theme ~/.dot/config/rofi/sway.rasi
 set $clipMenu ~/.dot/Scripts/wmenu-clip
-
 exec mako
 exec waybar
-# exec ryoku-shell daemon
 exec dbus-update-activation-environment
 exec blueman-applet
+
 exec wl-paste --type text --watch cliphist store
 exec wl-paste --type image --watch cliphist store
 
 default_border pixel 1
 default_floating_border pixel 1
 
-client.focused          #d0cca8 #1a1814 #d0cca8 #706c58 #d0cca8
-client.focused_inactive #706c58 #1a1814 #c0bc9e #524e3e #524e3e
-client.unfocused        #524e3e #1a1814 #c0bc9e #524e3e #524e3e
-client.urgent           #ff4444 #1a1814 #d0cca8 #ff4444 #ff4444
-client.placeholder      #2c2a24 #1a1814 #c0bc9e #2c2a24 #2c2a24
-
 gaps inner 2
 gaps outer 2
 
-focus_follows_mouse no
+focus_follows_mouse yes
 mouse_warping container
 
 corner_radius 8
-shadows enable
 blur enable
 
 bindsym $mod+$left          focus left
@@ -58,6 +50,9 @@ bindsym $mod+space          floating toggle
 bindsym $mod+f              fullscreen toggle
 bindsym $mod+q              kill
 
+bindsym Print               exec mkdir -p ~/Pictures/Screenshots && grim - | tee ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png | wl-copy
+bindsym $mod+Print          exec mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" - | tee ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png | wl-copy
+
 bindsym $mod+1              workspace number 1
 bindsym $mod+2              workspace number 2
 bindsym $mod+3              workspace number 3
@@ -80,6 +75,18 @@ bindsym $mod+Shift+8        move container to workspace number 8
 bindsym $mod+Shift+9        move container to workspace number 9
 bindsym $mod+Shift+0        move container to workspace number 10
 
+# ==========================================
+# ThinkPad X1 Carbon Gen 12 - Function Keys
+# ==========================================
+
+bindsym XF86AudioMute           exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioLowerVolume    exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume    exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioMicMute        exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86MonBrightnessDown   exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp     exec brightnessctl set +5%
+
+
 mode "resize" {
     bindsym k resize shrink height 50 px
     bindsym j resize grow height 50 px
@@ -97,6 +104,7 @@ bindsym $mod+Shift+q    exec swaymsg exit
 
 for_window [app_id="pavucontrol"] floating enable
 for_window [window_role="dialog"] floating enable
+floating_modifier $mod normal
 
 input type:touchpad {
     tap enabled
@@ -110,10 +118,12 @@ input * {
     repeat_delay 150
 }
 
-output eDP-1 {
-    # bg ~/Pictures/Wallpapers/yoru-darker-gray-bg.jpg fill
+output * {
+    bg ~/Pictures/Wallpapers/yoru-darker-gray-bg.jpg fill
     scale 1.25
 }
+
+output HDMI-A-1 mode 2560x1440@144.000Hz
 
 exec swayidle -w \
     timeout 300 'swaylock' \
@@ -121,4 +131,3 @@ exec swayidle -w \
     after-resume 'swaymsg "output * dpms on"' \
     before-sleep 'swaylock' \
     lock 'swaylock'
-

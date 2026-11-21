@@ -1,25 +1,22 @@
-/* ── YoRHa OS // Waybar ─────────────────────── */
-
 * {
     font-family: "IosevkaNLNice Nerd Font";
     font-size: 13px;
     font-weight: 500;
+    color: #FFFFFF;
     min-height: 0;
     border: none;
     border-radius: 0;
+    box-shadow: none;
+    transition: none;
 }
 
 window#waybar {
-    background: #1a1814;
-    color: #c0bc9e;
+    background: #222222;
 }
-
-/* ── Module spacing ─────────────────────────── */
 
 .modules-left,
 .modules-right {
     background: transparent;
-    border: none;
     padding: 0 6px;
 }
 
@@ -39,44 +36,37 @@ window#waybar {
 #battery,
 #clock {
     padding: 0 8px;
-    color: #c0bc9e;
 }
 
-/* ── Workspaces ─────────────────────────────── */
+/* ── Workspaces ────────────────────────────── */
 
 #workspaces {
     padding: 0 3px;
 }
 
 #workspaces button {
-    color: #706c58;
     background: transparent;
     padding: 0 10px;
-    margin: 4px 2px;
+    margin: 3px 2px;
     border: 1px solid transparent;
-    transition: none;
 }
 
 #workspaces button.focused {
-    color: #d0cca8;
-    background: #3e3c33;
-    border: 1px solid #706c58;
+    background: #285577;
+    border: 1px solid #285577;
 }
 
 #workspaces button:hover {
-    color: #d0cca8;
-    background: #3a3830;
-    border: 1px solid #706c58;
+    background: #303A42;
+    border: 1px solid #3B6A8C;
 }
 
 #workspaces button.urgent {
-    color: #ff4444;
 }
 
-/* ── System information ─────────────────────── */
+/* ── System information ────────────────────── */
 
 #clock {
-    color: #d0cca8;
     font-weight: 600;
     padding: 0 12px;
 }
@@ -84,36 +74,27 @@ window#waybar {
 #cpu,
 #memory,
 #temperature {
-    color: #c0bc9e;
 }
 
 #network,
 #bluetooth,
 #pulseaudio {
-    color: #d0cca8;
 }
 
 #battery {
-    color: #d0cca8;
 }
 
 #battery.warning {
-    color: #d0cca8;
 }
 
 #battery.critical {
-    color: #ff4444;
 }
 
-#idle_inhibitor {
-    color: #d0cca8;
+#idle_inhibitor,
+#power-profiles-daemon:hover {
 }
 
-#power-profiles-daemon {
-    color: #d0cca8;
-}
-
-/* ── Hover effects ──────────────────────────── */
+/* ── Hover ────────────────────────────────── */
 
 #network:hover,
 #bluetooth:hover,
@@ -123,19 +104,23 @@ window#waybar {
 #memory:hover,
 #clock:hover,
 #idle_inhibitor:hover {
-    background: #2c2a24;
+    background: #303A42;
 }
 
-/* ── Tooltips ───────────────────────────────── */
+/* ── Tooltips ─────────────────────────────── */
 
 tooltip {
-    background: #1a1814;
-    border: 1px solid #706c58;
-    border-radius: 0;
+    background: #1B2024;
+    border: 1px solid #3B6A8C;
+    border-radius: 8px;
 }
 
 tooltip label {
-    color: #d0cca8;
     padding: 4px;
 }
 
+/* @keyframes blink { */
+/*     to { */
+/*         background: #bf616a; */
+/*     } */
+/* } */

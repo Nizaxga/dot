@@ -1,9 +1,9 @@
 font=Pango:IosevkaNLNice Nerd Font 10
 
-background-color=#1a1814
-text-color=#d0cca8
-border-color=#706c58
-progress-color=over #524e3e
+background-color=#1e222a
+text-color=#d8dee9
+border-color=#4c566a
+progress-color=over #5e81ac
 
 border-size=1
 border-radius=8
@@ -23,17 +23,17 @@ markup=1
 format=<b>%s</b>\n%b
 
 [urgency=low]
-background-color=#1a1814
-text-color=#c0bc9e
-border-color=#524e3e
+background-color=#1e222a
+text-color=#a3adbd
+border-color=#3b4252
 
 [urgency=normal]
-background-color=#1a1814
-text-color=#d0cca8
-border-color=#706c58
+background-color=#1e222a
+text-color=#d8dee9
+border-color=#4c566a
 
 [urgency=critical]
-background-color=#2c1814
-text-color=#ff4444
-border-color=#ff4444
+background-color=#29212a
+text-color=#bf616a
+border-color=#bf616a
 default-timeout=0

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 cliphist list | 
-    ~/.dot/Scripts/wmenu-wrap -p "Clipboard" -l 10 | 
+    wmenu -f "IosevkaNLNice Nerd Font 10" -p "Clipboard" -l 10 | 
     cliphist decode |
     wl-copy

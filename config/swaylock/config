@@ -1,38 +1,31 @@
-# image=/home/nicek/.config/swaylock/lock-bg.png
-# scaling=fill
-# color=1a1814
+image=/home/nicek/Pictures/Wallpapers/yoru-darker-gray-bg.jpg
+scaling=fill
 
-inside-color=1a1814
-inside-clear-color=1a1814
-inside-caps-lock-color=1a1814
-inside-ver-color=1a1814
-inside-wrong-color=1a1814
+font=IosevkaNLNice Nerd Font
+font-size=50
 
-ring-color=706c58
-ring-clear-color=d0cca8
-ring-caps-lock-color=c0bc9e
-ring-ver-color=d0cca8
-ring-wrong-color=ff4444
+color=181818
+inside-color=181818
+inside-clear-color=181818
+inside-caps-lock-color=181818
+inside-ver-color=181818
+inside-wrong-color=181818
 
-key-hl-color=d0cca8
-bs-hl-color=ff4444
+ring-color=666666
+ring-clear-color=ffffff
+ring-caps-lock-color=bdbdbd
+ring-ver-color=ffffff
+ring-wrong-color=ffffff
 
-text-color=d0cca8
-text-clear-color=c0bc9e
-text-caps-lock-color=c0bc9e
-text-ver-color=d0cca8
-text-wrong-color=ff4444
+key-hl-color=ffffff
+bs-hl-color=bdbdbd
 
-separator-color=524e3e
+text-color=ffffff
+text-clear-color=bdbdbd
+text-caps-lock-color=bdbdbd
+text-ver-color=ffffff
+text-wrong-color=ffffff
 
+separator-color=444444
 indicator-radius=100
 indicator-thickness=7
-
-clock
-timestr=%H:%M
-datestr=%A, %d %B %Y
-
-show-failed-attempts
-ignore-empty-password
-font=IosevkaNLNice Nerd Font
-font-size=24
